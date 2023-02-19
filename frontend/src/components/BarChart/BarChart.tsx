@@ -7,7 +7,7 @@ import { CommentThread, useFetchChartData, useFetchComments } from 'utils/hooks'
 
 export const BAR_CHART_HEIGHT = 400
 export const BAR_CHART_WIDTH = 600
-export const PADDING_BELOW = 200
+export const PADDING_BELOW = 50
 export const PADDING_LEFT = 50
 
 export const TOTAL_SVG_HEIGHT = BAR_CHART_HEIGHT + PADDING_BELOW
@@ -46,7 +46,7 @@ export const BarChart = ({
         setThreadId,
       )
     }
-  }, [data, sorting])
+  }, [data, sorting, commentData, setThreadId])
 
   const toggleSorting = () => {
     setSorting(sorting === 'country' ? 'food' : 'country')

@@ -88,8 +88,9 @@ export const drawStackedBar = (
   let heightLeft = Number.MAX_VALUE
   finalSorted.forEach((foodType, index) => {
     const countryFoodCommentData = countryCommentData?.filter(
-      (c) => c.chartDataPoint.feature === foodType,
+      (c) => c.chartDataPoint?.feature === foodType,
     )
+
     heightLeft = Math.min(heightLeft, BAR_CHART_HEIGHT)
     const height = scaleHeight(data[foodType])
     const y = heightLeft - height
@@ -126,7 +127,6 @@ export const drawBar = (
   const onClick = () => {
     if (countryFoodCommentData?.length) {
       setThreadId(countryFoodCommentData[0].id)
-      console.log(countryFoodCommentData)
     }
   }
 
