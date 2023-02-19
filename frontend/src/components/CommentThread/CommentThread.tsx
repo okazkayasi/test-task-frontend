@@ -1,7 +1,16 @@
-export const CommentThread = () => {
+import { CommentThread } from 'utils/hooks'
+
+export const CommentThreadComponent = ({
+  commentData,
+}: {
+  commentData: CommentThread[] | null
+}) => {
+  console.log(commentData, 'comment data')
   return (
     <div>
-      <div>comment thread</div>
+      <div>
+        <h2>Comment Thread</h2>
+      </div>
     </div>
   )
 }

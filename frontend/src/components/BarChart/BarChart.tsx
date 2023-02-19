@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Block } from 'lib/Block'
-import { useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { drawStackedBarChart } from 'utils/drawFunctions'
 import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
 import { CommentThread, useFetchChartData, useFetchComments } from 'utils/hooks'
@@ -18,7 +18,15 @@ export type SortingType = 'country' | 'food'
 const SButtonWrapper = styled.div`
   margin-bottom: 2rem;
 `
-export const BarChart = ({ commentData }: { commentData: CommentThread[] | null }) => {
+
+export type SetThreadIdType = Dispatch<SetStateAction<string | null>>
+export const BarChart = ({
+  commentData,
+  setThreadId,
+}: {
+  commentData: CommentThread[] | null
+  setThreadId: SetThreadIdType
+}) => {
   const ref = useRef<SVGSVGElement>(null)
   const [sorting, setSorting] = useState<SortingType>('country')
   const { data, loading } = useFetchChartData()
@@ -28,7 +36,15 @@ export const BarChart = ({ commentData }: { commentData: CommentThread[] | null 
       const maxValue = getCountryWiseMaxValue(data)
       const foodWiseTotalValues = getFoodWiseValues(data)
       ref.current?.replaceChildren()
-      drawStackedBarChart(ref, data, maxValue, foodWiseTotalValues, sorting, commentData)
+      drawStackedBarChart(
+        ref,
+        data,
+        maxValue,
+        foodWiseTotalValues,
+        sorting,
+        commentData,
+        setThreadId,
+      )
     }
   }, [data, sorting])
 
@@ -41,7 +57,9 @@ export const BarChart = ({ commentData }: { commentData: CommentThread[] | null 
   return (
     <Block>
       <div>
-        <div>Bar Chart</div>
+        <div>
+          <h2>Bar Chart</h2>
+        </div>
         <SButtonWrapper>
           <button onClick={toggleSorting}>
             Set to {sorting === 'food' ? 'country' : 'food'}-based sorting

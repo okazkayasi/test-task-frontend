@@ -3,6 +3,7 @@ import {
   BAR_CHART_WIDTH,
   PADDING_BELOW,
   PADDING_LEFT,
+  SetThreadIdType,
   SortingType,
 } from 'components/BarChart/BarChart'
 import * as d3 from 'd3'
@@ -32,6 +33,7 @@ export const drawStackedBarChart = (
   foodWiseTotalValues: FoodNameTotalValueObject[],
   sortingType: SortingType,
   commentData: CommentThread[] | null,
+  setThreadId: SetThreadIdType,
 ) => {
   const sortedFoods = foodWiseTotalValues.map(getNames)
 
@@ -39,7 +41,15 @@ export const drawStackedBarChart = (
     const countryCommentData = commentData?.filter(
       (c) => c.chartDataPoint?.country === dataPoint?.country,
     )
-    drawStackedBar(ref, dataPoint, maxValue, sortedFoods, sortingType, countryCommentData)
+    drawStackedBar(
+      ref,
+      dataPoint,
+      maxValue,
+      sortedFoods,
+      sortingType,
+      setThreadId,
+      countryCommentData,
+    )
   })
 }
 
@@ -49,6 +59,7 @@ export const drawStackedBar = (
   maxValue: number,
   sortedFoods: ChartDataFeature[],
   sortingType: SortingType,
+  setThreadId: SetThreadIdType,
   countryCommentData?: CommentThread[],
 ) => {
   const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
@@ -84,7 +95,7 @@ export const drawStackedBar = (
     const y = heightLeft - height
     heightLeft = heightLeft - height
     const chartValues = { x: xVal, y, height }
-    drawBar(chartSvg, chartValues, foodType, countryFoodCommentData)
+    drawBar(chartSvg, chartValues, foodType, setThreadId, countryFoodCommentData)
   })
 }
 
@@ -109,10 +120,12 @@ export const drawBar = (
   chartSvg: D3Selection<SVGGElement>,
   chartValues: ChartValues,
   foodType: ChartDataFeature,
+  setThreadId: SetThreadIdType,
   countryFoodCommentData?: CommentThread[],
 ) => {
   const onClick = () => {
     if (countryFoodCommentData?.length) {
+      setThreadId(countryFoodCommentData[0].id)
       console.log(countryFoodCommentData)
     }
   }
