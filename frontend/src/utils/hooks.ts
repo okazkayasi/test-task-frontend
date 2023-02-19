@@ -1,8 +1,33 @@
 import { useEffect, useState } from 'react'
-import { CountryType } from 'utils/drawFunctions'
+
+
+export type ChartDataFeature = 'hotdog' | 'burger' | 'sandwich' | 'kebab' | 'fries' | 'donut';
+
+export type Country = 'FR' | 'GB' | 'BE' | 'DE' | 'ES' | 'IT'
+
+export type ChartDataPoint = {
+  feature: ChartDataFeature;
+  country: Country;
+}
+
+export type CommentThread = {
+  id: string;
+  comments_count: number;
+  chart_data_point: ChartDataPoint[];
+}
+
+export type Comment = {
+  user_name: string;
+  text: string;
+}
+
+export type FetchComment = {
+  data: CommentThread[] | null
+  loading: boolean
+}
 
 export type DataPoint = {
-  country: CountryType
+  country: Country
   hotdog: number
   burger: number
   sandwich: number
@@ -15,7 +40,21 @@ type FetchHook = {
   data: DataPoint[] | null
   loading: boolean
 }
-export function useFetch(url: string) {
+
+type FetchCommentHook = {
+
+}
+export function useFetchChartData() {
+  const {data, loading} = useFetch('http://localhost:8000/chart/data')
+  return { data, loading } as FetchHook
+}
+
+export function useFetchComments() {
+  const {data, loading} = useFetch('http://localhost:8000/chart/comment_threads')
+  return {data, loading} as FetchComment
+}
+
+function useFetch(url: string) {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
@@ -26,5 +65,5 @@ export function useFetch(url: string) {
         setLoading(false)
       })
   }, [url])
-  return { data, loading } as FetchHook
+  return {data, loading}
 }

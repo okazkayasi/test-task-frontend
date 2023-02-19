@@ -1,8 +1,8 @@
 import { Block } from 'lib/Block'
 import { useEffect, useRef, useState } from 'react'
-import { drawStackedBarChart, FOODS } from 'utils/drawFunctions'
+import { drawStackedBarChart } from 'utils/drawFunctions'
 import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
-import { useFetch } from 'utils/hooks'
+import {useFetchChartData, useFetchComments} from 'utils/hooks'
 
 export const BAR_CHART_HEIGHT = 400
 export const PADDING_BELOW = 200
@@ -11,16 +11,18 @@ export type SortingType = 'country' | 'food'
 export const BarChart = () => {
   const ref = useRef<SVGSVGElement>(null)
   const [sorting, setSorting] = useState<SortingType>('country')
-  const { data, loading } = useFetch('http://localhost:8000/chart/data')
-  console.log(data)
-  console.log(loading)
+  const { data, loading } = useFetchChartData()
+  const {data: commentData, loading: commentLoading} = useFetchComments()
+
+  console.log(commentData, commentLoading, 'data')
+
 
   useEffect(() => {
     if (data) {
       const maxValue = getCountryWiseMaxValue(data)
       const foodWiseTotalValues = getFoodWiseValues(data)
       ref.current?.replaceChildren()
-      drawStackedBarChart(ref, data, maxValue, foodWiseTotalValues, sorting)
+      drawStackedBarChart(ref, data, maxValue, foodWiseTotalValues, sorting, commentData)
     }
   }, [data, sorting])
 

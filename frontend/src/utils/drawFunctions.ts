@@ -1,8 +1,8 @@
 import { BAR_CHART_HEIGHT, BAR_CHART_WIDTH, SortingType } from 'components/BarChart/BarChart'
 import * as d3 from 'd3'
 import React from 'react'
-import { DataPoint } from 'utils/hooks'
-import { getCountrySortedValues, getNames } from 'utils/valueFunctions'
+import {ChartDataFeature, ChartDataPoint, CommentThread, DataPoint} from 'utils/hooks'
+import {getCountrySortedValues, getNames} from "utils/valueFunctions";
 
 export const BAR_WIDTH = 70
 export const SPACE_BETWEEN_BARS = 30
@@ -14,9 +14,7 @@ export const COLORS = {
   fries: '#ea589a',
   donut: '#ff5370',
 }
-export type FoodType = 'hotdog' | 'burger' | 'sandwich' | 'kebab' | 'fries' | 'donut'
-export type CountryType = 'FR' | 'GB' | 'BE' | 'DE' | 'ES' | 'IT'
-type FoodNameTotalValueObject = { name: FoodType; value: number }
+type FoodNameTotalValueObject = { name: ChartDataFeature; value: number }
 
 export const FOODS = ['hotdog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'] as const
 export const COUNTRIES = ['FR', 'GB', 'BE', 'DE', 'ES', 'IT'] as const
@@ -27,12 +25,15 @@ export const drawStackedBarChart = (
   maxValue: number,
   foodWiseTotalValues: FoodNameTotalValueObject[],
   sortingType: SortingType,
+  commentData: CommentThread[] | null
 ) => {
   const sortedFoods = foodWiseTotalValues.map(getNames)
   console.log(sortedFoods, 'sorted foods')
 
   data.forEach((dataPoint, index) => {
-    drawStackedBar(ref, dataPoint, maxValue, sortedFoods, sortingType)
+    // const countryData = commentData?.filter(c=> c.chart_data_point.)
+    const x = index * (BAR_WIDTH + SPACE_BETWEEN_BARS)
+    drawStackedBar(ref, dataPoint, maxValue, x, sortedFoods, sortingType)
   })
 }
 
@@ -40,7 +41,8 @@ export const drawStackedBar = (
   ref: React.RefObject<SVGSVGElement>,
   data: DataPoint,
   maxValue: number,
-  sortedFoods: FoodType[],
+  x: number,
+  sortedFoods: ChartDataFeature[],
   sortingType: SortingType,
 ) => {
   const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
@@ -76,7 +78,7 @@ export const drawBar = (
   height: number,
   color: string,
   maxValue: number,
-  foodType: FoodType,
+  foodType: ChartDataFeature,
 ) => {
   const svg = d3.select(ref.current)
   let text: d3.Selection<SVGTextElement, unknown, null, undefined>
@@ -111,7 +113,7 @@ const addTextOnBar = (
   x: number,
   y: number,
   height: number,
-  foodType: FoodType,
+  foodType: ChartDataFeature,
   bar: d3.Selection<SVGRectElement, unknown, null, undefined>,
 ) => {
   const svg = d3.select(ref.current)
