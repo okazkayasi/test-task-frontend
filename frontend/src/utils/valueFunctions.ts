@@ -1,4 +1,4 @@
-import { FOODS } from 'utils/drawFunctions'
+import { FOODS } from 'components/BarChart/constants'
 import { ChartDataFeature, DataPoint } from 'utils/types'
 
 export const getCountryWiseMaxValue = (data: DataPoint[] | null) => {

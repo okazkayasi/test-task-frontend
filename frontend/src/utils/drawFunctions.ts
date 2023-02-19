@@ -1,8 +1,13 @@
-import { BAR_CHART_HEIGHT, BAR_CHART_WIDTH, PADDING_LEFT } from 'components/BarChart/constants'
-import { SetDataType, SetThreadIdType, SortingType } from 'components/BarChart/types'
+import {
+  BAR_CHART_HEIGHT,
+  BAR_CHART_WIDTH,
+  COUNTRIES,
+  PADDING_LEFT,
+} from 'components/BarChart/constants'
+import { SetDataType, SortingType } from 'components/BarChart/types'
 import * as d3 from 'd3'
 import React from 'react'
-import { ChartDataFeature, ChartDataPoint, CommentThread, Country, DataPoint } from 'utils/types'
+import { ChartDataFeature, ChartDataPoint, CommentThread, DataPoint } from 'utils/types'
 import { getCountrySortedValues, getNames } from 'utils/valueFunctions'
 
 export const BAR_WIDTH = 70
@@ -16,9 +21,6 @@ export const COLORS = {
   donut: '#ff5370',
 }
 type FoodNameTotalValueObject = { name: ChartDataFeature; value: number }
-
-export const FOODS = ['hotdog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'] as const
-export const COUNTRIES = ['FR', 'GB', 'BE', 'DE', 'ES', 'IT'] as const
 
 export const drawStackedBarChart = (
   ref: React.RefObject<SVGSVGElement>,
