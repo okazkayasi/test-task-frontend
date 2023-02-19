@@ -126,8 +126,10 @@ export const drawBar = (
   const onClick = () => {
     if (countryFoodCommentData?.length) {
       setData.threadId(countryFoodCommentData[0].id)
+      setData.dataPoint(null)
     } else {
       setData.dataPoint(barInfo)
+      setData.threadId(null)
     }
   }
 

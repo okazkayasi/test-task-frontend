@@ -1,20 +1,15 @@
-import styled from '@emotion/styled'
+import { Nullable } from 'components/App/types'
 import { BarChart } from 'components/BarChart/BarChart'
 import { CommentThreadComponent } from 'components/CommentThread/CommentThread'
-import { Stack } from 'lib/Stack'
+import { SStack } from 'components/App/App.styled'
 import { useState } from 'react'
 import { ChartDataPoint, useFetchComments } from 'utils/hooks'
 
-const SStack = styled(Stack)`
-  padding-bottom: 3rem;
-`
-
-export type Nullable<T> = T | null
-
 function App() {
+  const [trigger, setTrigger] = useState(0)
   const [threadId, setThreadId] = useState<Nullable<string>>(null)
   const [dataPoint, setDataPoint] = useState<Nullable<ChartDataPoint>>(null) // [x, y
-  const { data: commentData, loading: commentLoading } = useFetchComments()
+  const { data: commentData, loading: commentLoading } = useFetchComments(trigger)
 
   console.log(dataPoint, 'datapoint')
   const setThreadAndDataPoint = (
@@ -23,6 +18,9 @@ function App() {
   ) => {
     setDataPoint(dataPoint)
     setThreadId(threadId)
+
+    // defensive programming in case you click 9007199254740991 2^53 − 1 times :)
+    setTrigger((prev) => (prev === Number.MAX_SAFE_INTEGER ? 0 : prev + 1))
   }
 
   return (

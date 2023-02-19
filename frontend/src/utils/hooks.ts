@@ -1,3 +1,4 @@
+import { Nullable } from 'components/App/types'
 import { useEffect, useState } from 'react'
 
 export type ChartDataFeature = 'hotdog' | 'burger' | 'sandwich' | 'kebab' | 'fries' | 'donut'
@@ -58,6 +59,8 @@ export function useFetchCommentWithId(threadId: string | null) {
 }
 
 export async function postCreateThread(comment: Comment, dataPoint: ChartDataPoint) {
+  console.log(comment, 'the comment')
+  console.log(dataPoint, 'the data point')
   const res = (await fetch('http://localhost:8000/chart/comment_threads', {
     method: 'POST',
     headers: {
@@ -68,9 +71,10 @@ export async function postCreateThread(comment: Comment, dataPoint: ChartDataPoi
         user_name: comment.userName,
         text: comment.text,
       },
-      chart_data_point: dataPoint,
+      data_point: dataPoint,
     }),
   }).then((res) => res.json())) as CommentThreadResponse
+  console.log(res, 'the res')
   return res.comments
 }
 export async function postRespondToExistingThread(threadId: string, comment: Comment) {
@@ -94,12 +98,12 @@ export function useFetchChartData() {
   return { data, loading } as FetchHook
 }
 
-export function useFetchComments() {
-  const { data, loading } = useFetch('http://localhost:8000/chart/comment_threads')
+export function useFetchComments(trigger: number) {
+  const { data, loading } = useFetch('http://localhost:8000/chart/comment_threads', trigger)
   return { data, loading } as FetchCommentHook
 }
 
-function useFetch(url: string | null) {
+function useFetch(url: Nullable<string>, trigger?: number) {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
@@ -110,6 +114,6 @@ function useFetch(url: string | null) {
         setData(data)
         setLoading(false)
       })
-  }, [url])
+  }, [url, trigger])
   return { data, loading }
 }

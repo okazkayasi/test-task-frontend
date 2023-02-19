@@ -1,6 +1,6 @@
-import { Nullable } from 'components/App/App'
+import { Nullable } from 'components/App/types'
 import React from 'react'
-import { ChartDataPoint, Comment, postRespondToExistingThread } from 'utils/hooks'
+import { ChartDataPoint, Comment, postCreateThread, postRespondToExistingThread } from 'utils/hooks'
 
 export const ResponseForm = ({
   threadId,
@@ -23,6 +23,18 @@ export const ResponseForm = ({
         })
         .catch((err) => console.error(err, 'err'))
     } else if (dataPoint) {
+      postCreateThread(
+        {
+          userName: name,
+          text: comment,
+        },
+        dataPoint,
+      )
+        .then((comments) => {
+          console.log(comments, 'post response comments')
+          setComments(comments)
+        })
+        .catch((err) => console.error(err, 'err'))
     }
   }
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

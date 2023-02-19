@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Nullable } from 'components/App/App'
+import { Nullable } from 'components/App/types'
 import { CommentCard } from 'components/CommentCard/CommentCard'
 import { ResponseForm } from 'components/ResponseForm/ResponseForm'
 import { Block } from 'lib/Block'
@@ -42,8 +42,8 @@ export const CommentThreadComponent = ({
         <h2>Comment Thread</h2>
         {loading ? (
           <p>Super nice loading component</p>
-        ) : !data || !comments ? (
-          <p>Super nice no data component</p>
+        ) : !dataPoint && !threadId ? (
+          <p>Select a data point from bar chart</p>
         ) : (
           <SStack>
             <SStack space="1.5rem">

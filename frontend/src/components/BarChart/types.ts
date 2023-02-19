@@ -1,4 +1,4 @@
-import { Nullable } from 'components/App/App'
+import { Nullable } from 'components/App/types'
 import { Dispatch, SetStateAction } from 'react'
 import { ChartDataPoint } from 'utils/hooks'
 
