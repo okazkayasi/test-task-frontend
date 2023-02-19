@@ -3,7 +3,13 @@ import { CommentCard } from 'components/CommentCard/CommentCard'
 import { ResponseForm } from 'components/ResponseForm/ResponseForm'
 import { Block } from 'lib/Block'
 import { Stack } from 'lib/Stack'
-import { CommentThread, postRespondToExistingThread, useFetchCommentWithId } from 'utils/hooks'
+import { useEffect, useState } from 'react'
+import {
+  Comment,
+  CommentThread,
+  postRespondToExistingThread,
+  useFetchCommentWithId,
+} from 'utils/hooks'
 
 const SStack = styled(Stack)`
   margin-top: 1rem;
@@ -16,8 +22,13 @@ export const CommentThreadComponent = ({
   threadId: string | null
 }) => {
   const { data, loading } = useFetchCommentWithId(threadId)
+  const [comments, setComments] = useState(data?.comments || [])
+
   console.log(data, 'data in thread')
-  const comments = data?.comments
+
+  useEffect(() => {
+    setComments(data?.comments || [])
+  }, [data])
 
   const sendResponse = () => {
     if (data?.id) {
@@ -45,7 +56,7 @@ export const CommentThreadComponent = ({
                 <CommentCard comment={comment} />
               ))}
             </SStack>
-            {threadId && <ResponseForm threadId={threadId} />}
+            {threadId && <ResponseForm threadId={threadId} setComments={setComments} />}
           </SStack>
         )}
       </div>

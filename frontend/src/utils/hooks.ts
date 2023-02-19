@@ -48,6 +48,10 @@ type FetchCommentWithIdHook = {
   data: CommentThreadResponse | null
   loading: boolean
 }
+
+type RespondToCommentThreadRequest = {
+  comment: Comment
+}
 export function useFetchCommentWithId(threadId: string | null) {
   const { data, loading } = useFetch(
     threadId ? `http://localhost:8000/chart/comment_threads/${threadId}` : null,
@@ -57,7 +61,7 @@ export function useFetchCommentWithId(threadId: string | null) {
 }
 
 export async function postRespondToExistingThread(threadId: string, comment: Comment) {
-  return await fetch(`http://localhost:8000/chart/comment_threads/${threadId}/respond`, {
+  const res = (await fetch(`http://localhost:8000/chart/comment_threads/${threadId}/respond`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,7 +72,8 @@ export async function postRespondToExistingThread(threadId: string, comment: Com
         text: comment.text,
       },
     }),
-  }).then((res) => res.json())
+  }).then((res) => res.json())) as CommentThreadResponse
+  return res.comments
 }
 
 export function useFetchChartData() {
