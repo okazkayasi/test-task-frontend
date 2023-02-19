@@ -35,11 +35,12 @@ export const CommentThreadComponent = ({
     feature: data?.chartDataPoint.feature ?? dataPoint?.feature,
   }
 
-  const title = (
+  const title = !!titleData.feature && (
     <SDataPointTitle>
       {titleData.feature} - {!!titleData.country && COUNTRIES[titleData.country]}
     </SDataPointTitle>
   )
+
   return (
     <SBlock>
       <div>
@@ -48,7 +49,7 @@ export const CommentThreadComponent = ({
           <p>Super nice loading component</p>
         ) : !dataPoint && !threadId && !data?.comments ? (
           <>
-            <p>Select a data point from bar chart</p>
+            <p style={{ marginTop: '1rem' }}>Select a data point from bar chart to add comment</p>
             {title}
           </>
         ) : (
