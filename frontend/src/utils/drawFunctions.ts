@@ -1,4 +1,10 @@
-import { BAR_CHART_HEIGHT, BAR_CHART_WIDTH, SortingType } from 'components/BarChart/BarChart'
+import {
+  BAR_CHART_HEIGHT,
+  BAR_CHART_WIDTH,
+  PADDING_BELOW,
+  PADDING_LEFT,
+  SortingType,
+} from 'components/BarChart/BarChart'
 import * as d3 from 'd3'
 import React from 'react'
 import { ChartDataFeature, ChartDataPoint, Comment, CommentThread, DataPoint } from 'utils/hooks'
@@ -33,8 +39,7 @@ export const drawStackedBarChart = (
     const countryCommentData = commentData?.filter(
       (c) => c.chartDataPoint?.country === dataPoint?.country,
     )
-    const x = index * (BAR_WIDTH + SPACE_BETWEEN_BARS)
-    drawStackedBar(ref, dataPoint, maxValue, x, sortedFoods, sortingType, countryCommentData)
+    drawStackedBar(ref, dataPoint, maxValue, sortedFoods, sortingType, countryCommentData)
   })
 }
 
@@ -42,19 +47,26 @@ export const drawStackedBar = (
   ref: React.RefObject<SVGSVGElement>,
   data: DataPoint,
   maxValue: number,
-  x: number,
   sortedFoods: ChartDataFeature[],
   sortingType: SortingType,
   countryCommentData?: CommentThread[],
 ) => {
   const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
+  const scaleYAxis = d3.scaleLinear().domain([maxValue, 0]).range([0, BAR_CHART_HEIGHT])
   const scaleBand = d3.scaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.8)
 
   const svg = d3.select(ref.current)
   svg
     .append('g')
     .call(d3.axisBottom(scaleBand))
-    .attr('transform', `translate(0, ${BAR_CHART_HEIGHT})`)
+    .attr('transform', `translate(${PADDING_LEFT}, ${BAR_CHART_HEIGHT + 10})`)
+
+  svg
+    .append('g')
+    .call(d3.axisLeft(scaleYAxis))
+    .attr('transform', `translate(${PADDING_LEFT}, ${0})`)
+
+  const chartSvg = svg.append('g').attr('transform', `translate(${PADDING_LEFT}, ${0})`)
 
   const xVal = (scaleBand(data.country) ?? BAR_WIDTH / 2) - BAR_WIDTH / 2
   const countrySortedFoods =
@@ -73,7 +85,7 @@ export const drawStackedBar = (
     const color = COLORS[foodType]
     const y = heightLeft - height
     heightLeft = heightLeft - height
-    drawBar(ref, y, xVal, height, color, maxValue, foodType, countryFoodCommentData)
+    drawBar(chartSvg, y, xVal, height, color, maxValue, foodType, countryFoodCommentData)
   })
 }
 
@@ -90,7 +102,7 @@ export const raiseBar = (
 }
 
 export const drawBar = (
-  ref: React.RefObject<SVGSVGElement>,
+  chartSvg: D3Selection<SVGGElement>,
   y: number,
   x: number,
   height: number,
@@ -99,10 +111,9 @@ export const drawBar = (
   foodType: ChartDataFeature,
   countryFoodCommentData?: CommentThread[],
 ) => {
-  const svg = d3.select(ref.current)
   let foodText: D3Selection<SVGTextElement>
   let commentText: D3Selection<SVGTextElement>
-  const bar = svg
+  const bar = chartSvg
     .append('rect')
     .attr('x', x)
     .attr('y', y)
@@ -117,8 +128,8 @@ export const drawBar = (
       d3.select(this).attr('stroke', 'white')
     })
 
-  foodText = addFoodTextOnBar(ref, x, y, height, foodType)
-  commentText = addCommentTextOnBar(ref, x, y, height, countryFoodCommentData?.length ?? 0)
+  foodText = addFoodTextOnBar(chartSvg, x, y, height, foodType)
+  commentText = addCommentTextOnBar(chartSvg, x, y, height, countryFoodCommentData?.length ?? 0)
 
   bar.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
   foodText.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
@@ -126,18 +137,17 @@ export const drawBar = (
 }
 
 const addCommentTextOnBar = (
-  ref: React.RefObject<SVGSVGElement>,
+  chartSvg: D3Selection<SVGGElement>,
   x: number,
   y: number,
   height: number,
   countryFoodCommentDataLength: number,
 ) => {
-  const svg = d3.select(ref.current)
-  const text = svg
+  const text = chartSvg
     .append('text')
     .attr('x', x + BAR_WIDTH / 2)
     .attr('y', y)
-    .attr('dy', height / 2 + 10)
+    .attr('dy', height / 2 + 8)
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
     .attr('font-size', () => {
@@ -153,14 +163,13 @@ const addCommentTextOnBar = (
 }
 
 const addFoodTextOnBar = (
-  ref: React.RefObject<SVGSVGElement>,
+  chartSvg: D3Selection<SVGGElement>,
   x: number,
   y: number,
   height: number,
   foodType: ChartDataFeature,
 ) => {
-  const svg = d3.select(ref.current)
-  const text = svg
+  const text = chartSvg
     .append('text')
     .attr('x', x + BAR_WIDTH / 2)
     .attr('y', y)

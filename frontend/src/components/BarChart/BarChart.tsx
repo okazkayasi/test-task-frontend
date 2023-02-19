@@ -1,21 +1,30 @@
+import styled from '@emotion/styled'
 import { Block } from 'lib/Block'
 import { useEffect, useRef, useState } from 'react'
 import { drawStackedBarChart } from 'utils/drawFunctions'
 import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
-import {useFetchChartData, useFetchComments} from 'utils/hooks'
+import { useFetchChartData, useFetchComments } from 'utils/hooks'
 
 export const BAR_CHART_HEIGHT = 400
-export const PADDING_BELOW = 200
 export const BAR_CHART_WIDTH = 600
+export const PADDING_BELOW = 200
+export const PADDING_LEFT = 50
+
+export const TOTAL_SVG_HEIGHT = BAR_CHART_HEIGHT + PADDING_BELOW
+export const TOTAL_SVG_WIDTH = BAR_CHART_WIDTH + PADDING_LEFT
+
 export type SortingType = 'country' | 'food'
+
+const SButtonWrapper = styled.div`
+  margin-bottom: 2rem;
+`
 export const BarChart = () => {
   const ref = useRef<SVGSVGElement>(null)
   const [sorting, setSorting] = useState<SortingType>('country')
   const { data, loading } = useFetchChartData()
-  const {data: commentData, loading: commentLoading} = useFetchComments()
+  const { data: commentData, loading: commentLoading } = useFetchComments()
 
   console.log(commentData, commentLoading, 'data')
-
 
   useEffect(() => {
     if (data) {
@@ -36,10 +45,12 @@ export const BarChart = () => {
     <Block>
       <div>
         <div>Bar Chart</div>
-        <button onClick={toggleSorting}>
-          Set to {sorting === 'food' ? 'country' : 'food'}-based sorting
-        </button>
-        <svg width={1000} height={BAR_CHART_HEIGHT} ref={ref} />
+        <SButtonWrapper>
+          <button onClick={toggleSorting}>
+            Set to {sorting === 'food' ? 'country' : 'food'}-based sorting
+          </button>
+        </SButtonWrapper>
+        <svg width={TOTAL_SVG_WIDTH} height={TOTAL_SVG_HEIGHT} ref={ref} />
       </div>
     </Block>
   )
