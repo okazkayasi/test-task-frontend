@@ -1,16 +1,17 @@
-import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 import { Nullable } from 'components/App/types'
 import { CommentCard } from 'components/CommentCard/CommentCard'
+import { COUNTRIES } from 'components/CommentThread/constants'
 import { ResponseForm } from 'components/ResponseForm/ResponseForm'
-import { Block } from 'lib/Block'
-import { Stack } from 'lib/Stack'
-import { useEffect, useState } from 'react'
-import { postRespondToExistingThread, useFetchCommentWithId } from 'utils/talkToAPIFunctions'
+import { useFetchCommentWithId } from 'utils/talkToAPIFunctions'
 import { ChartDataPoint, Comment, CommentThread } from 'utils/types'
+import {
+  SStack,
+  SDataPointTitle,
+  STitle,
+  SBlock,
+} from 'components/CommentThread/CommentThread.styled'
 
-const SStack = styled(Stack)`
-  margin-top: 1rem;
-`
 export const CommentThreadComponent = ({
   commentData,
   threadId,
@@ -25,21 +26,32 @@ export const CommentThreadComponent = ({
   trigger: number
 }) => {
   const { data, loading } = useFetchCommentWithId(threadId, trigger)
-
+  console.log(data, 'data in comment thread')
   const setCommentAndTrigger = (comments: Comment[]) => {
     triggerFetch()
   }
 
+  const country = data?.chartDataPoint.country
+
+  const title = (
+    <SDataPointTitle>
+      {data?.chartDataPoint.feature} - {!!country && COUNTRIES[country]}
+    </SDataPointTitle>
+  )
   return (
-    <Block>
+    <SBlock>
       <div>
-        <h2>Comment Thread</h2>
+        <STitle>Comment Thread</STitle>
         {loading ? (
           <p>Super nice loading component</p>
         ) : !dataPoint && !threadId && !data?.comments ? (
-          <p>Select a data point from bar chart</p>
+          <>
+            <p>Select a data point from bar chart</p>
+            {title}
+          </>
         ) : (
           <SStack>
+            {title}
             <SStack space="1.5rem">
               {data?.comments?.map((comment) => (
                 <CommentCard comment={comment} key={comment.userName + comment.text} />
@@ -47,6 +59,7 @@ export const CommentThreadComponent = ({
             </SStack>
             {(threadId || dataPoint) && (
               <ResponseForm
+                title={threadId ? 'Enter a response' : 'Enter a comment'}
                 threadId={threadId}
                 setCommentAndTrigger={setCommentAndTrigger}
                 dataPoint={dataPoint}
@@ -55,6 +68,6 @@ export const CommentThreadComponent = ({
           </SStack>
         )}
       </div>
-    </Block>
+    </SBlock>
   )
 }
