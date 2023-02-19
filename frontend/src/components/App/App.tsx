@@ -12,13 +12,6 @@ function App() {
   const [dataPoint, setDataPoint] = useState<Nullable<ChartDataPoint>>(null) // [x, y
   const { data: commentData } = useFetchComments(trigger)
 
-  console.log(dataPoint, 'datapoint')
-  console.log(commentData, 'commentData')
-
-  useEffect(() => {
-    console.log('triggering')
-  }, [dataPoint, threadId])
-
   const triggerFetch = () => {
     setTrigger((prev) => (prev === Number.MAX_SAFE_INTEGER ? 0 : prev + 1))
   }

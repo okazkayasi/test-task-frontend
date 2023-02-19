@@ -149,10 +149,7 @@ export const drawBar = (
     .on('mouseout', function (d) {
       d3.select(this).attr('stroke', 'white')
     })
-    .on('click', () => {
-      console.log('on click')
-      onClick()
-    })
+    .on('click', onClick)
 
   foodText = addFoodTextOnBar(chartSvg, chartValues, barInfo.feature)
   commentText = addCommentTextOnBar(

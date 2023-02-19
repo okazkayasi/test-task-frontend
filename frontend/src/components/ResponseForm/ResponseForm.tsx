@@ -19,7 +19,6 @@ export const ResponseForm = ({
         text: comment,
       })
         .then((comments) => {
-          console.log(comments, 'post response comments')
           setCommentAndTrigger(comments)
         })
         .catch((err) => console.error(err, 'err'))
@@ -32,7 +31,6 @@ export const ResponseForm = ({
         dataPoint,
       )
         .then((comments) => {
-          console.log(comments, 'post response comments')
           setCommentAndTrigger(comments)
         })
         .catch((err) => console.error(err, 'err'))

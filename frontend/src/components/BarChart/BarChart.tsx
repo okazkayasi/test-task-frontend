@@ -26,8 +26,6 @@ export const BarChart = ({
     dataPoint: setDataPoint,
   }
 
-  console.log(commentData, 'commentData in bar chart')
-
   useEffect(() => {
     if (data) {
       const maxValue = getCountryWiseMaxValue(data)

@@ -19,8 +19,6 @@ export function useFetchCommentWithId(threadId: Nullable<string>, trigger?: numb
 }
 
 export async function postCreateThread(comment: Comment, dataPoint: ChartDataPoint) {
-  console.log(comment, 'the comment')
-  console.log(dataPoint, 'the data point')
   const res = (await fetch('http://localhost:8000/chart/comment_threads', {
     method: 'POST',
     headers: {
@@ -34,7 +32,6 @@ export async function postCreateThread(comment: Comment, dataPoint: ChartDataPoi
       data_point: dataPoint,
     }),
   }).then((res) => res.json())) as CommentThreadResponse
-  console.log(res, 'the res')
   return res.comments
 }
 export async function postRespondToExistingThread(threadId: string, comment: Comment) {
