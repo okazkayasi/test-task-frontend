@@ -1,7 +1,7 @@
 import { Block } from 'lib/Block'
 import { useEffect, useRef } from 'react'
-import { drawStackedBarChart } from 'utils/drawFunctions'
-import { getMaxValue } from 'utils/getMaxVal'
+import { drawStackedBarChart, FOODS } from 'utils/drawFunctions'
+import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
 import { useFetch } from 'utils/hooks'
 
 export const BAR_CHART_HEIGHT = 500
@@ -14,8 +14,9 @@ export const BarChart = () => {
 
   useEffect(() => {
     if (data) {
-      const maxValue = getMaxValue(data)
-      drawStackedBarChart(ref, data, maxValue)
+      const maxValue = getCountryWiseMaxValue(data)
+      const foodWiseTotalValues = getFoodWiseValues(data)
+      drawStackedBarChart(ref, data, maxValue, foodWiseTotalValues)
     }
   }, [data])
 
