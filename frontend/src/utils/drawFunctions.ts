@@ -127,6 +127,8 @@ export const drawBar = (
   const onClick = () => {
     if (countryFoodCommentData?.length) {
       setThreadId(countryFoodCommentData[0].id)
+    } else{
+      setThreadId(null)
     }
   }
 

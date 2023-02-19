@@ -1,9 +1,9 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled'
 import { CommentCard } from 'components/CommentCard/CommentCard'
+import { ResponseForm } from 'components/ResponseForm/ResponseForm'
 import { Block } from 'lib/Block'
 import { Stack } from 'lib/Stack'
-import { CommentThread, useFetchCommentWithId } from 'utils/hooks'
-
+import { CommentThread, postRespondToExistingThread, useFetchCommentWithId } from 'utils/hooks'
 
 const SStack = styled(Stack)`
   margin-top: 1rem;
@@ -18,6 +18,18 @@ export const CommentThreadComponent = ({
   const { data, loading } = useFetchCommentWithId(threadId)
   console.log(data, 'data in thread')
   const comments = data?.comments
+
+  const sendResponse = () => {
+    if (data?.id) {
+      postRespondToExistingThread(data.id, {
+        userName: 'oguz',
+        text: 'example response',
+      }).then(
+        (res) => console.log(res, 'res'),
+        (err) => console.log(err, 'err'),
+      )
+    }
+  }
   return (
     <Block>
       <div>
@@ -27,10 +39,13 @@ export const CommentThreadComponent = ({
         ) : !data || !comments ? (
           <p>Super nice no data component</p>
         ) : (
-          <SStack space="1.5rem">
-            {comments?.map((comment) => (
-              <CommentCard comment={comment} />
-            ))}
+          <SStack>
+            <SStack space="1.5rem">
+              {comments?.map((comment) => (
+                <CommentCard comment={comment} />
+              ))}
+            </SStack>
+            {threadId && <ResponseForm threadId={threadId} />}
           </SStack>
         )}
       </div>

@@ -12,7 +12,7 @@ const NameLogo = ({ name }: { name: string }) => {
   const nameShort = name[0]
   return (
     <SNameLogoWrapper>
-      <p>{nameShort}</p>
+      <p style={{ textTransform: 'capitalize' }}>{nameShort}</p>
     </SNameLogoWrapper>
   )
 }
@@ -37,6 +37,7 @@ const SNameText = styled.h5`
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  text-transform: capitalize;
 `
 
 const SCommentText = styled.p`
