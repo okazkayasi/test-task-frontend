@@ -42,7 +42,7 @@ export const CommentThreadComponent = ({
           <SStack>
             <SStack space="1.5rem">
               {data?.comments?.map((comment) => (
-                <CommentCard comment={comment} />
+                <CommentCard comment={comment} key={comment.userName + comment.text} />
               ))}
             </SStack>
             {(threadId || dataPoint) && (
