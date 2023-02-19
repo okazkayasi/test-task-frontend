@@ -35,34 +35,6 @@ export const drawStackedBarChart = (
   commentData: CommentThread[] | null,
   setThreadId: SetThreadIdType,
 ) => {
-  const sortedFoods = foodWiseTotalValues.map(getNames)
-
-  data.forEach((dataPoint, index) => {
-    const countryCommentData = commentData?.filter(
-      (c) => c.chartDataPoint?.country === dataPoint?.country,
-    )
-    drawStackedBar(
-      ref,
-      dataPoint,
-      maxValue,
-      sortedFoods,
-      sortingType,
-      setThreadId,
-      countryCommentData,
-    )
-  })
-}
-
-export const drawStackedBar = (
-  ref: React.RefObject<SVGSVGElement>,
-  data: DataPoint,
-  maxValue: number,
-  sortedFoods: ChartDataFeature[],
-  sortingType: SortingType,
-  setThreadId: SetThreadIdType,
-  countryCommentData?: CommentThread[],
-) => {
-  const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
   const scaleYAxis = d3.scaleLinear().domain([maxValue, 0]).range([0, BAR_CHART_HEIGHT])
   const scaleBand = d3.scaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.3)
 
@@ -78,6 +50,37 @@ export const drawStackedBar = (
     .attr('transform', `translate(${PADDING_LEFT}, ${0})`)
 
   const chartSvg = svg.append('g').attr('transform', `translate(${PADDING_LEFT}, ${0})`)
+
+  const sortedFoods = foodWiseTotalValues.map(getNames)
+
+  data.forEach((dataPoint, index) => {
+    const countryCommentData = commentData?.filter(
+      (c) => c.chartDataPoint?.country === dataPoint?.country,
+    )
+    drawStackedBar(
+      chartSvg,
+      dataPoint,
+      maxValue,
+      sortedFoods,
+      sortingType,
+      setThreadId,
+      scaleBand,
+      countryCommentData,
+    )
+  })
+}
+
+export const drawStackedBar = (
+  chartSvg: D3Selection<SVGGElement>,
+  data: DataPoint,
+  maxValue: number,
+  sortedFoods: ChartDataFeature[],
+  sortingType: SortingType,
+  setThreadId: SetThreadIdType,
+  scaleBand: d3.ScaleBand<string>,
+  countryCommentData?: CommentThread[],
+) => {
+  const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
 
   const xVal = scaleBand(data.country) ?? BAR_WIDTH / 2
   const countrySortedFoods =
@@ -127,7 +130,7 @@ export const drawBar = (
   const onClick = () => {
     if (countryFoodCommentData?.length) {
       setThreadId(countryFoodCommentData[0].id)
-    } else{
+    } else {
       setThreadId(null)
     }
   }
