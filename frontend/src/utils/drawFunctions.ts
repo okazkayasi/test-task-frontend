@@ -51,12 +51,13 @@ export const drawStackedBar = (
 
   const finalSorted = sortingType === 'food' ? sortedFoods : countrySortedFoods
 
-  let heighLeft = BAR_CHART_HEIGHT
+  let heightLeft = Number.MAX_VALUE
   finalSorted.forEach((foodType, index) => {
+    heightLeft = Math.min(heightLeft, BAR_CHART_HEIGHT)
     const height = scaleHeight(data[foodType])
     const color = COLORS[foodType]
-    const y = heighLeft - height
-    heighLeft = heighLeft - height
+    const y = heightLeft - height
+    heightLeft = heightLeft - height
     drawBar(ref, y, xVal, height, color, maxValue, foodType)
   })
 }
