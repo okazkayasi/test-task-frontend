@@ -1,23 +1,29 @@
-import { useState } from 'react'
-import { Comment, postRespondToExistingThread } from 'utils/hooks'
+import { Nullable } from 'components/App/App'
+import React from 'react'
+import { ChartDataPoint, Comment, postRespondToExistingThread } from 'utils/hooks'
 
 export const ResponseForm = ({
   threadId,
+  dataPoint,
   setComments,
 }: {
-  threadId: string
+  threadId: Nullable<string>
+  dataPoint: Nullable<ChartDataPoint>
   setComments: React.Dispatch<React.SetStateAction<Comment[]>>
 }) => {
   const postData = async (name: string, comment: string) => {
-    postRespondToExistingThread(threadId, {
-      userName: name,
-      text: comment,
-    })
-      .then((comments) => {
-        console.log(comments, 'post response comments')
-        setComments(comments)
+    if (threadId) {
+      postRespondToExistingThread(threadId, {
+        userName: name,
+        text: comment,
       })
-      .catch((err) => console.error(err, 'err'))
+        .then((comments) => {
+          console.log(comments, 'post response comments')
+          setComments(comments)
+        })
+        .catch((err) => console.error(err, 'err'))
+    } else if (dataPoint) {
+    }
   }
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

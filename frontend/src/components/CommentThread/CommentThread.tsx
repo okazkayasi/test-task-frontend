@@ -1,10 +1,12 @@
 import styled from '@emotion/styled'
+import { Nullable } from 'components/App/App'
 import { CommentCard } from 'components/CommentCard/CommentCard'
 import { ResponseForm } from 'components/ResponseForm/ResponseForm'
 import { Block } from 'lib/Block'
 import { Stack } from 'lib/Stack'
 import { useEffect, useState } from 'react'
 import {
+  ChartDataPoint,
   Comment,
   CommentThread,
   postRespondToExistingThread,
@@ -16,10 +18,14 @@ const SStack = styled(Stack)`
 `
 export const CommentThreadComponent = ({
   commentData,
+  setThreadAndDataPoint,
   threadId,
+  dataPoint,
 }: {
   commentData: CommentThread[] | null
-  threadId: string | null
+  setThreadAndDataPoint: (dataPoint: Nullable<ChartDataPoint>, threadId: Nullable<string>) => void
+  threadId: Nullable<string>
+  dataPoint: Nullable<ChartDataPoint>
 }) => {
   const { data, loading } = useFetchCommentWithId(threadId)
   const [comments, setComments] = useState(data?.comments || [])
@@ -30,17 +36,6 @@ export const CommentThreadComponent = ({
     setComments(data?.comments || [])
   }, [data])
 
-  const sendResponse = () => {
-    if (data?.id) {
-      postRespondToExistingThread(data.id, {
-        userName: 'oguz',
-        text: 'example response',
-      }).then(
-        (res) => console.log(res, 'res'),
-        (err) => console.log(err, 'err'),
-      )
-    }
-  }
   return (
     <Block>
       <div>
@@ -56,7 +51,9 @@ export const CommentThreadComponent = ({
                 <CommentCard comment={comment} />
               ))}
             </SStack>
-            {threadId && <ResponseForm threadId={threadId} setComments={setComments} />}
+            {(threadId || dataPoint) && (
+              <ResponseForm threadId={threadId} setComments={setComments} dataPoint={dataPoint} />
+            )}
           </SStack>
         )}
       </div>
