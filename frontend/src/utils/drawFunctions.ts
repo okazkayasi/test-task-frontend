@@ -151,11 +151,12 @@ export const drawBar = (
     })
     .on('click', onClick)
 
-  foodText = addFoodTextOnBar(chartSvg, chartValues, barInfo.feature)
+  foodText = addFoodTextOnBar(chartSvg, chartValues, barInfo.feature, onClick)
   commentText = addCommentTextOnBar(
     chartSvg,
     chartValues,
     countryFoodCommentData?.commentsCount ?? 0,
+    onClick,
   )
 
   bar.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
@@ -167,6 +168,7 @@ const addCommentTextOnBar = (
   chartSvg: D3Selection<SVGGElement>,
   chartValues: ChartValues,
   countryFoodCommentDataLength: number,
+  onClick: () => void,
 ) => {
   const text = chartSvg
     .append('text')
@@ -184,6 +186,7 @@ const addCommentTextOnBar = (
     })
     .style('cursor', 'pointer')
     .text(countryFoodCommentDataLength ? `${countryFoodCommentDataLength} comments` : 'No comment')
+    .on('click', onClick)
   return text
 }
 
@@ -191,6 +194,7 @@ const addFoodTextOnBar = (
   chartSvg: D3Selection<SVGGElement>,
   chartValues: ChartValues,
   foodType: ChartDataFeature,
+  onClick: () => void,
 ) => {
   const text = chartSvg
     .append('text')
@@ -209,5 +213,7 @@ const addFoodTextOnBar = (
       }
     })
     .text(foodType)
+    .on('click', onClick)
+
   return text
 }
