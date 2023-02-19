@@ -3,7 +3,7 @@ import { Block } from 'lib/Block'
 import { useEffect, useRef, useState } from 'react'
 import { drawStackedBarChart } from 'utils/drawFunctions'
 import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
-import { useFetchChartData, useFetchComments } from 'utils/hooks'
+import { CommentThread, useFetchChartData, useFetchComments } from 'utils/hooks'
 
 export const BAR_CHART_HEIGHT = 400
 export const BAR_CHART_WIDTH = 600
@@ -18,13 +18,10 @@ export type SortingType = 'country' | 'food'
 const SButtonWrapper = styled.div`
   margin-bottom: 2rem;
 `
-export const BarChart = () => {
+export const BarChart = ({ commentData }: { commentData: CommentThread[] | null }) => {
   const ref = useRef<SVGSVGElement>(null)
   const [sorting, setSorting] = useState<SortingType>('country')
   const { data, loading } = useFetchChartData()
-  const { data: commentData, loading: commentLoading } = useFetchComments()
-
-  console.log(commentData, commentLoading, 'data')
 
   useEffect(() => {
     if (data) {

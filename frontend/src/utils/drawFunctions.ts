@@ -53,7 +53,7 @@ export const drawStackedBar = (
 ) => {
   const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
   const scaleYAxis = d3.scaleLinear().domain([maxValue, 0]).range([0, BAR_CHART_HEIGHT])
-  const scaleBand = d3.scaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.8)
+  const scaleBand = d3.scaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.3)
 
   const svg = d3.select(ref.current)
   svg
