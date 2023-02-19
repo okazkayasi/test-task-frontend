@@ -68,7 +68,7 @@ export const drawStackedBar = (
 
   const chartSvg = svg.append('g').attr('transform', `translate(${PADDING_LEFT}, ${0})`)
 
-  const xVal = (scaleBand(data.country) ?? BAR_WIDTH / 2) - BAR_WIDTH / 2
+  const xVal = scaleBand(data.country) ?? BAR_WIDTH / 2
   const countrySortedFoods =
     sortingType === 'food' ? [] : getCountrySortedValues(data).map(getNames)
 
@@ -79,13 +79,12 @@ export const drawStackedBar = (
     const countryFoodCommentData = countryCommentData?.filter(
       (c) => c.chartDataPoint.feature === foodType,
     )
-    console.log(countryFoodCommentData, foodType, 'food')
     heightLeft = Math.min(heightLeft, BAR_CHART_HEIGHT)
     const height = scaleHeight(data[foodType])
-    const color = COLORS[foodType]
     const y = heightLeft - height
     heightLeft = heightLeft - height
-    drawBar(chartSvg, y, xVal, height, color, maxValue, foodType, countryFoodCommentData)
+    const chartValues = { x: xVal, y, height }
+    drawBar(chartSvg, chartValues, foodType, countryFoodCommentData)
   })
 }
 
@@ -101,25 +100,32 @@ export const raiseBar = (
   text2.raise()
 }
 
+type ChartValues = {
+  x: number
+  y: number
+  height: number
+}
 export const drawBar = (
   chartSvg: D3Selection<SVGGElement>,
-  y: number,
-  x: number,
-  height: number,
-  color: string,
-  maxValue: number,
+  chartValues: ChartValues,
   foodType: ChartDataFeature,
   countryFoodCommentData?: CommentThread[],
 ) => {
+  const onClick = () => {
+    if (countryFoodCommentData?.length) {
+      console.log(countryFoodCommentData)
+    }
+  }
+
   let foodText: D3Selection<SVGTextElement>
   let commentText: D3Selection<SVGTextElement>
   const bar = chartSvg
     .append('rect')
-    .attr('x', x)
-    .attr('y', y)
+    .attr('x', chartValues.x)
+    .attr('y', chartValues.y)
     .attr('width', BAR_WIDTH)
-    .attr('height', height)
-    .attr('fill', color)
+    .attr('height', chartValues.height)
+    .attr('fill', COLORS[foodType])
     .attr('stroke', 'white')
     .attr('stroke-width', 2)
     .attr('rx', '5')
@@ -127,9 +133,13 @@ export const drawBar = (
     .on('mouseout', function (d) {
       d3.select(this).attr('stroke', 'white')
     })
+    .on('click', () => {
+      console.log('on click')
+      onClick()
+    })
 
-  foodText = addFoodTextOnBar(chartSvg, x, y, height, foodType)
-  commentText = addCommentTextOnBar(chartSvg, x, y, height, countryFoodCommentData?.length ?? 0)
+  foodText = addFoodTextOnBar(chartSvg, chartValues, foodType)
+  commentText = addCommentTextOnBar(chartSvg, chartValues, countryFoodCommentData?.length ?? 0)
 
   bar.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
   foodText.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
@@ -138,23 +148,21 @@ export const drawBar = (
 
 const addCommentTextOnBar = (
   chartSvg: D3Selection<SVGGElement>,
-  x: number,
-  y: number,
-  height: number,
+  chartValues: ChartValues,
   countryFoodCommentDataLength: number,
 ) => {
   const text = chartSvg
     .append('text')
-    .attr('x', x + BAR_WIDTH / 2)
-    .attr('y', y)
-    .attr('dy', height / 2 + 8)
+    .attr('x', chartValues.x + BAR_WIDTH / 2)
+    .attr('y', chartValues.y)
+    .attr('dy', chartValues.height / 2 + 8)
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
     .attr('font-size', () => {
       return '0.4rem'
     })
     .style('display', () => {
-      if (height < 25) return 'none'
+      if (chartValues.height < 25) return 'none'
       return 'block'
     })
     .style('cursor', 'pointer')
@@ -164,22 +172,20 @@ const addCommentTextOnBar = (
 
 const addFoodTextOnBar = (
   chartSvg: D3Selection<SVGGElement>,
-  x: number,
-  y: number,
-  height: number,
+  chartValues: ChartValues,
   foodType: ChartDataFeature,
 ) => {
   const text = chartSvg
     .append('text')
-    .attr('x', x + BAR_WIDTH / 2)
-    .attr('y', y)
-    .attr('dy', height / 2)
+    .attr('x', chartValues.x + BAR_WIDTH / 2)
+    .attr('y', chartValues.y)
+    .attr('dy', chartValues.height / 2)
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
     .style('text-transform', 'capitalize')
     .style('cursor', 'pointer')
     .attr('font-size', () => {
-      if (height > 14) {
+      if (chartValues.height > 14) {
         return '0.5rem'
       } else {
         return '0.3rem'

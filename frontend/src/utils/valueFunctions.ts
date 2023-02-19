@@ -10,7 +10,6 @@ export const getCountryWiseMaxValue = (data: DataPoint[] | null) => {
     })
     .map((d) => Object.values(d).reduce((acc, curr) => acc + curr, 0))
 
-  console.log(countryWiseTotalValues, 'total')
   const maxVal = countryWiseTotalValues ? Math.max(...countryWiseTotalValues) : 0
   return maxVal
 }
