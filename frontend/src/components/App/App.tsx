@@ -11,17 +11,24 @@ function App() {
   const [threadId, setThreadId] = useState<Nullable<string>>(null)
   const [dataPoint, setDataPoint] = useState<Nullable<ChartDataPoint>>(null) // [x, y
   const { data: commentData } = useFetchComments(trigger)
-
+  console.log(commentData, 'com data', dataPoint)
   const triggerFetch = () => {
     setTrigger((prev) => (prev === Number.MAX_SAFE_INTEGER ? 0 : prev + 1))
   }
+  const matchingThreadId =
+    commentData?.find(
+      (commentThread) =>
+        commentThread.chartDataPoint.country === dataPoint?.country &&
+        commentThread.chartDataPoint.feature === dataPoint?.feature,
+    )?.id ?? null
+  console.log(matchingThreadId, 'matching thread id')
 
   return (
     <SStack>
       <BarChart commentData={commentData} setThreadId={setThreadId} setDataPoint={setDataPoint} />
       <CommentThreadComponent
         commentData={commentData}
-        threadId={threadId}
+        threadId={threadId ?? matchingThreadId}
         dataPoint={dataPoint}
         triggerFetch={triggerFetch}
         trigger={trigger}

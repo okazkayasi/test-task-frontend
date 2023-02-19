@@ -25,17 +25,21 @@ export const CommentThreadComponent = ({
   triggerFetch: () => void
   trigger: number
 }) => {
+  console.log('trigger i get', trigger, threadId)
   const { data, loading } = useFetchCommentWithId(threadId, trigger)
   console.log(data, 'data in comment thread')
   const setCommentAndTrigger = (comments: Comment[]) => {
     triggerFetch()
   }
 
-  const country = data?.chartDataPoint.country
+  const titleData = {
+    country: data?.chartDataPoint.country ?? dataPoint?.country,
+    feature: data?.chartDataPoint.feature ?? dataPoint?.feature,
+  }
 
   const title = (
     <SDataPointTitle>
-      {data?.chartDataPoint.feature} - {!!country && COUNTRIES[country]}
+      {titleData.feature} - {!!titleData.country && COUNTRIES[titleData.country]}
     </SDataPointTitle>
   )
   return (
