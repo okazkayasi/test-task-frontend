@@ -25,9 +25,7 @@ export const CommentThreadComponent = ({
   triggerFetch: () => void
   trigger: number
 }) => {
-  console.log('trigger i get', trigger, threadId)
   const { data, loading } = useFetchCommentWithId(threadId, trigger)
-  console.log(data, 'data in comment thread')
   const setCommentAndTrigger = (comments: Comment[]) => {
     triggerFetch()
   }
