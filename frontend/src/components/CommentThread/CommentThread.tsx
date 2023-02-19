@@ -5,36 +5,30 @@ import { ResponseForm } from 'components/ResponseForm/ResponseForm'
 import { Block } from 'lib/Block'
 import { Stack } from 'lib/Stack'
 import { useEffect, useState } from 'react'
-import {
-  ChartDataPoint,
-  Comment,
-  CommentThread,
-  postRespondToExistingThread,
-  useFetchCommentWithId,
-} from 'utils/hooks'
+import { postRespondToExistingThread, useFetchCommentWithId } from 'utils/hooks'
+import { ChartDataPoint, Comment, CommentThread } from 'utils/types'
 
 const SStack = styled(Stack)`
   margin-top: 1rem;
 `
 export const CommentThreadComponent = ({
   commentData,
-  setThreadAndDataPoint,
   threadId,
   dataPoint,
+  triggerFetch,
+  trigger,
 }: {
   commentData: CommentThread[] | null
-  setThreadAndDataPoint: (dataPoint: Nullable<ChartDataPoint>, threadId: Nullable<string>) => void
   threadId: Nullable<string>
   dataPoint: Nullable<ChartDataPoint>
+  triggerFetch: () => void
+  trigger: number
 }) => {
-  const { data, loading } = useFetchCommentWithId(threadId)
-  const [comments, setComments] = useState(data?.comments || [])
+  const { data, loading } = useFetchCommentWithId(threadId, trigger)
 
-  console.log(data, 'data in thread')
-
-  useEffect(() => {
-    setComments(data?.comments || [])
-  }, [data])
+  const setCommentAndTrigger = (comments: Comment[]) => {
+    triggerFetch()
+  }
 
   return (
     <Block>
@@ -42,17 +36,21 @@ export const CommentThreadComponent = ({
         <h2>Comment Thread</h2>
         {loading ? (
           <p>Super nice loading component</p>
-        ) : !dataPoint && !threadId ? (
+        ) : !dataPoint && !threadId && !data?.comments ? (
           <p>Select a data point from bar chart</p>
         ) : (
           <SStack>
             <SStack space="1.5rem">
-              {comments?.map((comment) => (
+              {data?.comments?.map((comment) => (
                 <CommentCard comment={comment} />
               ))}
             </SStack>
             {(threadId || dataPoint) && (
-              <ResponseForm threadId={threadId} setComments={setComments} dataPoint={dataPoint} />
+              <ResponseForm
+                threadId={threadId}
+                setCommentAndTrigger={setCommentAndTrigger}
+                dataPoint={dataPoint}
+              />
             )}
           </SStack>
         )}

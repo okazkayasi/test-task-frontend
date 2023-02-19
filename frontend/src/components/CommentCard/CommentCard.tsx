@@ -6,7 +6,7 @@ import {
   SNameText,
 } from 'components/CommentCard/CommentCard.styled'
 import { HStack, Stack } from 'lib/Stack'
-import { Comment } from 'utils/hooks'
+import { Comment } from 'utils/types'
 
 const NameLogo = ({ name }: { name: string }) => {
   const nameShort = name[0]

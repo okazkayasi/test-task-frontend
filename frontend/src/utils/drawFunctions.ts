@@ -2,7 +2,7 @@ import { BAR_CHART_HEIGHT, BAR_CHART_WIDTH, PADDING_LEFT } from 'components/BarC
 import { SetDataType, SetThreadIdType, SortingType } from 'components/BarChart/types'
 import * as d3 from 'd3'
 import React from 'react'
-import { ChartDataFeature, ChartDataPoint, CommentThread, Country, DataPoint } from 'utils/hooks'
+import { ChartDataFeature, ChartDataPoint, CommentThread, Country, DataPoint } from 'utils/types'
 import { getCountrySortedValues, getNames } from 'utils/valueFunctions'
 
 export const BAR_WIDTH = 70
@@ -83,7 +83,7 @@ export const drawStackedBar = (
 
   let heightLeft = Number.MAX_VALUE
   finalSorted.forEach((foodType, index) => {
-    const countryFoodCommentData = countryCommentData?.filter(
+    const countryFoodCommentData = countryCommentData?.find(
       (c) => c.chartDataPoint?.feature === foodType,
     )
     const barInfo = {
@@ -121,11 +121,11 @@ export const drawBar = (
   chartValues: ChartValues,
   barInfo: ChartDataPoint,
   setData: SetDataType,
-  countryFoodCommentData?: CommentThread[],
+  countryFoodCommentData?: CommentThread,
 ) => {
   const onClick = () => {
-    if (countryFoodCommentData?.length) {
-      setData.threadId(countryFoodCommentData[0].id)
+    if (countryFoodCommentData) {
+      setData.threadId(countryFoodCommentData.id)
       setData.dataPoint(null)
     } else {
       setData.dataPoint(barInfo)
@@ -155,7 +155,11 @@ export const drawBar = (
     })
 
   foodText = addFoodTextOnBar(chartSvg, chartValues, barInfo.feature)
-  commentText = addCommentTextOnBar(chartSvg, chartValues, countryFoodCommentData?.length ?? 0)
+  commentText = addCommentTextOnBar(
+    chartSvg,
+    chartValues,
+    countryFoodCommentData?.commentsCount ?? 0,
+  )
 
   bar.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
   foodText.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))

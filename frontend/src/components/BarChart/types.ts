@@ -1,6 +1,6 @@
 import { Nullable } from 'components/App/types'
 import { Dispatch, SetStateAction } from 'react'
-import { ChartDataPoint } from 'utils/hooks'
+import { ChartDataPoint } from 'utils/types'
 
 export type SortingType = 'country' | 'food'
 export type SetThreadIdType = Dispatch<SetStateAction<Nullable<string>>>

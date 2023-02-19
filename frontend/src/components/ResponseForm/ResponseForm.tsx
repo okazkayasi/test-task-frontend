@@ -1,15 +1,16 @@
 import { Nullable } from 'components/App/types'
 import React from 'react'
-import { ChartDataPoint, Comment, postCreateThread, postRespondToExistingThread } from 'utils/hooks'
+import { postCreateThread, postRespondToExistingThread } from 'utils/hooks'
+import { ChartDataPoint, Comment } from 'utils/types'
 
 export const ResponseForm = ({
   threadId,
   dataPoint,
-  setComments,
+  setCommentAndTrigger,
 }: {
   threadId: Nullable<string>
   dataPoint: Nullable<ChartDataPoint>
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>
+  setCommentAndTrigger: (comment: Comment[]) => void
 }) => {
   const postData = async (name: string, comment: string) => {
     if (threadId) {
@@ -19,7 +20,7 @@ export const ResponseForm = ({
       })
         .then((comments) => {
           console.log(comments, 'post response comments')
-          setComments(comments)
+          setCommentAndTrigger(comments)
         })
         .catch((err) => console.error(err, 'err'))
     } else if (dataPoint) {
@@ -32,7 +33,7 @@ export const ResponseForm = ({
       )
         .then((comments) => {
           console.log(comments, 'post response comments')
-          setComments(comments)
+          setCommentAndTrigger(comments)
         })
         .catch((err) => console.error(err, 'err'))
     }

@@ -4,7 +4,8 @@ import { SetDataPointType, SetThreadIdType, SortingType } from 'components/BarCh
 import { Block } from 'lib/Block'
 import { useEffect, useRef, useState } from 'react'
 import { drawStackedBarChart } from 'utils/drawFunctions'
-import { CommentThread, useFetchChartData } from 'utils/hooks'
+import { useFetchChartData } from 'utils/hooks'
+import { CommentThread } from 'utils/types'
 import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
 
 export const BarChart = ({
@@ -24,6 +25,8 @@ export const BarChart = ({
     threadId: setThreadId,
     dataPoint: setDataPoint,
   }
+
+  console.log(commentData, 'commentData in bar chart')
 
   useEffect(() => {
     if (data) {
