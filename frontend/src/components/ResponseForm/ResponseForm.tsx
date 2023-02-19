@@ -1,6 +1,6 @@
 import { Nullable } from 'components/App/types'
 import React from 'react'
-import { postCreateThread, postRespondToExistingThread } from 'utils/hooks'
+import { postCreateThread, postRespondToExistingThread } from 'utils/talkToAPIFunctions'
 import { ChartDataPoint, Comment } from 'utils/types'
 
 export const ResponseForm = ({

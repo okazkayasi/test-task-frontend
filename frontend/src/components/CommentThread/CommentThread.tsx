@@ -5,7 +5,7 @@ import { ResponseForm } from 'components/ResponseForm/ResponseForm'
 import { Block } from 'lib/Block'
 import { Stack } from 'lib/Stack'
 import { useEffect, useState } from 'react'
-import { postRespondToExistingThread, useFetchCommentWithId } from 'utils/hooks'
+import { postRespondToExistingThread, useFetchCommentWithId } from 'utils/talkToAPIFunctions'
 import { ChartDataPoint, Comment, CommentThread } from 'utils/types'
 
 const SStack = styled(Stack)`
