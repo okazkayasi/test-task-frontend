@@ -1,4 +1,4 @@
-import { FOODS } from 'utils/drawFunctions'
+import { FOODS, FoodType } from 'utils/drawFunctions'
 import { DataPoint } from 'utils/hooks'
 
 export const getCountryWiseMaxValue = (data: DataPoint[] | null) => {
@@ -22,3 +22,13 @@ export const getFoodWiseValues = (data: DataPoint[] | null) => {
     value: data.reduce((acc, curr) => acc + curr[foodType], 0),
   })).sort((a, b) => b.value - a.value)
 }
+
+export const getCountrySortedValues = (data: DataPoint): { name: FoodType; value: number }[] =>
+  FOODS.map((foodType) => {
+    return {
+      name: foodType,
+      value: data[foodType],
+    }
+  }).sort((a, b) => b.value - a.value)
+
+export const getNames = (d: { name: FoodType }) => d.name

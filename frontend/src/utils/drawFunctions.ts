@@ -1,7 +1,8 @@
-import { BAR_CHART_HEIGHT, SortingType } from 'components/BarChart/BarChart'
+import { BAR_CHART_HEIGHT, BAR_CHART_WIDTH, SortingType } from 'components/BarChart/BarChart'
 import * as d3 from 'd3'
 import React from 'react'
 import { DataPoint } from 'utils/hooks'
+import { getCountrySortedValues, getNames } from 'utils/valueFunctions'
 
 export const BAR_WIDTH = 70
 export const SPACE_BETWEEN_BARS = 30
@@ -14,9 +15,11 @@ export const COLORS = {
   donut: '#ff5370',
 }
 export type FoodType = 'hotdog' | 'burger' | 'sandwich' | 'kebab' | 'fries' | 'donut'
+export type CountryType = 'FR' | 'GB' | 'BE' | 'DE' | 'ES' | 'IT'
 type FoodNameTotalValueObject = { name: FoodType; value: number }
 
 export const FOODS = ['hotdog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'] as const
+export const COUNTRIES = ['FR', 'GB', 'BE', 'DE', 'ES', 'IT'] as const
 
 export const drawStackedBarChart = (
   ref: React.RefObject<SVGSVGElement>,
@@ -25,12 +28,11 @@ export const drawStackedBarChart = (
   foodWiseTotalValues: FoodNameTotalValueObject[],
   sortingType: SortingType,
 ) => {
-  const sortedFoods = foodWiseTotalValues.map((food) => food.name)
+  const sortedFoods = foodWiseTotalValues.map(getNames)
   console.log(sortedFoods, 'sorted foods')
 
   data.forEach((dataPoint, index) => {
-    const x = index * (BAR_WIDTH + SPACE_BETWEEN_BARS)
-    drawStackedBar(ref, dataPoint, maxValue, x, sortedFoods, sortingType)
+    drawStackedBar(ref, dataPoint, maxValue, sortedFoods, sortingType)
   })
 }
 
@@ -38,34 +40,24 @@ export const drawStackedBar = (
   ref: React.RefObject<SVGSVGElement>,
   data: DataPoint,
   maxValue: number,
-  x: number,
   sortedFoods: FoodType[],
   sortingType: SortingType,
 ) => {
   const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
-
+  const scaleBand = d3.scaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.8)
+  const xVal = scaleBand(data.country) || 0
   const countrySortedFoods =
-    sortingType === 'food'
-      ? []
-      : FOODS.map((foodType) => {
-          return {
-            name: foodType,
-            value: data[foodType],
-          }
-        })
-          .sort((a, b) => b.value - a.value)
-          .map((v) => v.name)
-
-  let heighLeft = BAR_CHART_HEIGHT
+    sortingType === 'food' ? [] : getCountrySortedValues(data).map(getNames)
 
   const finalSorted = sortingType === 'food' ? sortedFoods : countrySortedFoods
 
+  let heighLeft = BAR_CHART_HEIGHT
   finalSorted.forEach((foodType, index) => {
     const height = scaleHeight(data[foodType])
     const color = COLORS[foodType]
     const y = heighLeft - height
     heighLeft = heighLeft - height
-    drawBar(ref, y, x, height, color, maxValue, foodType)
+    drawBar(ref, y, xVal, height, color, maxValue, foodType)
   })
 }
 

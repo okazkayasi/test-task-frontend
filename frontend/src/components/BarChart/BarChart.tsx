@@ -4,7 +4,8 @@ import { drawStackedBarChart, FOODS } from 'utils/drawFunctions'
 import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
 import { useFetch } from 'utils/hooks'
 
-export const BAR_CHART_HEIGHT = 500
+export const BAR_CHART_HEIGHT = 400
+export const BAR_CHART_WIDTH = 600
 export type SortingType = 'country' | 'food'
 export const BarChart = () => {
   const ref = useRef<SVGSVGElement>(null)

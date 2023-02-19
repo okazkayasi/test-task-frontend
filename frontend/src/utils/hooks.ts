@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import { CountryType } from 'utils/drawFunctions'
 
 export type DataPoint = {
-  country: string
+  country: CountryType
   hotdog: number
   burger: number
   sandwich: number
