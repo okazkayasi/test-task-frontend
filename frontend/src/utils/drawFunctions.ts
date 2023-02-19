@@ -1,8 +1,8 @@
 import { BAR_CHART_HEIGHT, BAR_CHART_WIDTH, SortingType } from 'components/BarChart/BarChart'
 import * as d3 from 'd3'
 import React from 'react'
-import {ChartDataFeature, ChartDataPoint, CommentThread, DataPoint} from 'utils/hooks'
-import {getCountrySortedValues, getNames} from "utils/valueFunctions";
+import { ChartDataFeature, ChartDataPoint, Comment, CommentThread, DataPoint } from 'utils/hooks'
+import { getCountrySortedValues, getNames } from 'utils/valueFunctions'
 
 export const BAR_WIDTH = 70
 export const SPACE_BETWEEN_BARS = 30
@@ -25,15 +25,16 @@ export const drawStackedBarChart = (
   maxValue: number,
   foodWiseTotalValues: FoodNameTotalValueObject[],
   sortingType: SortingType,
-  commentData: CommentThread[] | null
+  commentData: CommentThread[] | null,
 ) => {
   const sortedFoods = foodWiseTotalValues.map(getNames)
-  console.log(sortedFoods, 'sorted foods')
 
   data.forEach((dataPoint, index) => {
-    // const countryData = commentData?.filter(c=> c.chart_data_point.)
+    const countryCommentData = commentData?.filter(
+      (c) => c.chartDataPoint?.country === dataPoint?.country,
+    )
     const x = index * (BAR_WIDTH + SPACE_BETWEEN_BARS)
-    drawStackedBar(ref, dataPoint, maxValue, x, sortedFoods, sortingType)
+    drawStackedBar(ref, dataPoint, maxValue, x, sortedFoods, sortingType, countryCommentData)
   })
 }
 
@@ -44,6 +45,7 @@ export const drawStackedBar = (
   x: number,
   sortedFoods: ChartDataFeature[],
   sortingType: SortingType,
+  countryCommentData?: CommentThread[],
 ) => {
   const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
   const scaleBand = d3.scaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.8)
@@ -62,13 +64,29 @@ export const drawStackedBar = (
 
   let heightLeft = Number.MAX_VALUE
   finalSorted.forEach((foodType, index) => {
+    const countryFoodCommentData = countryCommentData?.filter(
+      (c) => c.chartDataPoint.feature === foodType,
+    )
+    console.log(countryFoodCommentData, foodType, 'food')
     heightLeft = Math.min(heightLeft, BAR_CHART_HEIGHT)
     const height = scaleHeight(data[foodType])
     const color = COLORS[foodType]
     const y = heightLeft - height
     heightLeft = heightLeft - height
-    drawBar(ref, y, xVal, height, color, maxValue, foodType)
+    drawBar(ref, y, xVal, height, color, maxValue, foodType, countryFoodCommentData)
   })
+}
+
+type D3Selection<T extends d3.BaseType> = d3.Selection<T, unknown, null, undefined>
+
+export const raiseBar = (
+  bar: D3Selection<SVGRectElement>,
+  text1: D3Selection<SVGTextElement>,
+  text2: D3Selection<SVGTextElement>,
+) => {
+  bar.attr('stroke', 'black').raise()
+  text1.raise()
+  text2.raise()
 }
 
 export const drawBar = (
@@ -79,9 +97,11 @@ export const drawBar = (
   color: string,
   maxValue: number,
   foodType: ChartDataFeature,
+  countryFoodCommentData?: CommentThread[],
 ) => {
   const svg = d3.select(ref.current)
-  let text: d3.Selection<SVGTextElement, unknown, null, undefined>
+  let foodText: D3Selection<SVGTextElement>
+  let commentText: D3Selection<SVGTextElement>
   const bar = svg
     .append('rect')
     .attr('x', x)
@@ -92,29 +112,52 @@ export const drawBar = (
     .attr('stroke', 'white')
     .attr('stroke-width', 2)
     .attr('rx', '5')
-    .on('mouseover', function (d) {
-      d3.select(this).attr('stroke', 'black').raise()
-      text.raise()
-    })
+    .style('cursor', 'pointer')
     .on('mouseout', function (d) {
       d3.select(this).attr('stroke', 'white')
     })
 
-  text = addTextOnBar(ref, x, y, height, foodType, bar)
-  text.on('mouseover', function (d) {
-    bar.attr('stroke', 'black').raise()
-    bar.raise()
-    d3.select(this).raise()
-  })
+  foodText = addFoodTextOnBar(ref, x, y, height, foodType)
+  commentText = addCommentTextOnBar(ref, x, y, height, countryFoodCommentData?.length ?? 0)
+
+  bar.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
+  foodText.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
+  commentText.on('mouseover', raiseBar.bind(null, bar, foodText, commentText))
 }
 
-const addTextOnBar = (
+const addCommentTextOnBar = (
+  ref: React.RefObject<SVGSVGElement>,
+  x: number,
+  y: number,
+  height: number,
+  countryFoodCommentDataLength: number,
+) => {
+  const svg = d3.select(ref.current)
+  const text = svg
+    .append('text')
+    .attr('x', x + BAR_WIDTH / 2)
+    .attr('y', y)
+    .attr('dy', height / 2 + 10)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'middle')
+    .attr('font-size', () => {
+      return '0.4rem'
+    })
+    .style('display', () => {
+      if (height < 25) return 'none'
+      return 'block'
+    })
+    .style('cursor', 'pointer')
+    .text(countryFoodCommentDataLength ? `${countryFoodCommentDataLength} comments` : 'No comment')
+  return text
+}
+
+const addFoodTextOnBar = (
   ref: React.RefObject<SVGSVGElement>,
   x: number,
   y: number,
   height: number,
   foodType: ChartDataFeature,
-  bar: d3.Selection<SVGRectElement, unknown, null, undefined>,
 ) => {
   const svg = d3.select(ref.current)
   const text = svg
@@ -124,6 +167,8 @@ const addTextOnBar = (
     .attr('dy', height / 2)
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
+    .style('text-transform', 'capitalize')
+    .style('cursor', 'pointer')
     .attr('font-size', () => {
       if (height > 14) {
         return '0.5rem'

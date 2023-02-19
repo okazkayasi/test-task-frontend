@@ -12,16 +12,16 @@ export type ChartDataPoint = {
 
 export type CommentThread = {
   id: string;
-  comments_count: number;
-  chart_data_point: ChartDataPoint[];
+  commentsCount: number;
+  chartDataPoint: ChartDataPoint;
 }
 
 export type Comment = {
-  user_name: string;
+  userName: string;
   text: string;
 }
 
-export type FetchComment = {
+export type FetchCommentHook = {
   data: CommentThread[] | null
   loading: boolean
 }
@@ -41,9 +41,6 @@ type FetchHook = {
   loading: boolean
 }
 
-type FetchCommentHook = {
-
-}
 export function useFetchChartData() {
   const {data, loading} = useFetch('http://localhost:8000/chart/data')
   return { data, loading } as FetchHook
@@ -51,7 +48,7 @@ export function useFetchChartData() {
 
 export function useFetchComments() {
   const {data, loading} = useFetch('http://localhost:8000/chart/comment_threads')
-  return {data, loading} as FetchComment
+  return {data, loading} as FetchCommentHook
 }
 
 function useFetch(url: string) {
