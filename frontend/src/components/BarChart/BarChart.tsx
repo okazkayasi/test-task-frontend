@@ -1,25 +1,12 @@
-import styled from '@emotion/styled'
+import { SButtonWrapper } from 'components/BarChart/BarChart.styled'
+import { TOTAL_SVG_HEIGHT, TOTAL_SVG_WIDTH } from 'components/BarChart/constants'
+import { SetThreadIdType, SortingType } from 'components/BarChart/types'
 import { Block } from 'lib/Block'
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { drawStackedBarChart } from 'utils/drawFunctions'
+import { CommentThread, useFetchChartData } from 'utils/hooks'
 import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
-import { CommentThread, useFetchChartData, useFetchComments } from 'utils/hooks'
 
-export const BAR_CHART_HEIGHT = 400
-export const BAR_CHART_WIDTH = 600
-export const PADDING_BELOW = 50
-export const PADDING_LEFT = 50
-
-export const TOTAL_SVG_HEIGHT = BAR_CHART_HEIGHT + PADDING_BELOW
-export const TOTAL_SVG_WIDTH = BAR_CHART_WIDTH + PADDING_LEFT
-
-export type SortingType = 'country' | 'food'
-
-const SButtonWrapper = styled.div`
-  margin-bottom: 2rem;
-`
-
-export type SetThreadIdType = Dispatch<SetStateAction<string | null>>
 export const BarChart = ({
   commentData,
   setThreadId,

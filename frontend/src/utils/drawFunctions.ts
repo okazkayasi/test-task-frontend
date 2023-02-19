@@ -3,9 +3,8 @@ import {
   BAR_CHART_WIDTH,
   PADDING_BELOW,
   PADDING_LEFT,
-  SetThreadIdType,
-  SortingType,
-} from 'components/BarChart/BarChart'
+} from 'components/BarChart/constants'
+import { SetThreadIdType, SortingType } from 'components/BarChart/types'
 import * as d3 from 'd3'
 import React from 'react'
 import { ChartDataFeature, ChartDataPoint, Comment, CommentThread, DataPoint } from 'utils/hooks'
@@ -52,7 +51,6 @@ export const drawStackedBarChart = (
   const chartSvg = svg.append('g').attr('transform', `translate(${PADDING_LEFT}, ${0})`)
 
   const sortedFoods = foodWiseTotalValues.map(getNames)
-
   data.forEach((dataPoint, index) => {
     const countryCommentData = commentData?.filter(
       (c) => c.chartDataPoint?.country === dataPoint?.country,
