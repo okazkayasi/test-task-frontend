@@ -1,4 +1,4 @@
-import { BAR_CHART_HEIGHT } from 'components/BarChart/BarChart'
+import { BAR_CHART_HEIGHT, SortingType } from 'components/BarChart/BarChart'
 import * as d3 from 'd3'
 import React from 'react'
 import { DataPoint } from 'utils/hooks'
@@ -23,13 +23,14 @@ export const drawStackedBarChart = (
   data: DataPoint[],
   maxValue: number,
   foodWiseTotalValues: FoodNameTotalValueObject[],
+  sortingType: SortingType,
 ) => {
   const sortedFoods = foodWiseTotalValues.map((food) => food.name)
   console.log(sortedFoods, 'sorted foods')
 
   data.forEach((dataPoint, index) => {
     const x = index * (BAR_WIDTH + SPACE_BETWEEN_BARS)
-    drawStackedBar(ref, dataPoint, maxValue, x, sortedFoods)
+    drawStackedBar(ref, dataPoint, maxValue, x, sortedFoods, sortingType)
   })
 }
 
@@ -39,11 +40,27 @@ export const drawStackedBar = (
   maxValue: number,
   x: number,
   sortedFoods: FoodType[],
+  sortingType: SortingType,
 ) => {
   const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
 
+  const countrySortedFoods =
+    sortingType === 'food'
+      ? []
+      : FOODS.map((foodType) => {
+          return {
+            name: foodType,
+            value: data[foodType],
+          }
+        })
+          .sort((a, b) => b.value - a.value)
+          .map((v) => v.name)
+
   let heighLeft = BAR_CHART_HEIGHT
-  sortedFoods.forEach((foodType, index) => {
+
+  const finalSorted = sortingType === 'food' ? sortedFoods : countrySortedFoods
+
+  finalSorted.forEach((foodType, index) => {
     const height = scaleHeight(data[foodType])
     const color = COLORS[foodType]
     const y = heighLeft - height
