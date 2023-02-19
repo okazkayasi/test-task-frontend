@@ -5,6 +5,7 @@ import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
 import { useFetch } from 'utils/hooks'
 
 export const BAR_CHART_HEIGHT = 400
+export const PADDING_BELOW = 200
 export const BAR_CHART_WIDTH = 600
 export type SortingType = 'country' | 'food'
 export const BarChart = () => {

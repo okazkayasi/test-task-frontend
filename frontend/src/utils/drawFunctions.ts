@@ -45,7 +45,14 @@ export const drawStackedBar = (
 ) => {
   const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
   const scaleBand = d3.scaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.8)
-  const xVal = scaleBand(data.country) || 0
+
+  const svg = d3.select(ref.current)
+  svg
+    .append('g')
+    .call(d3.axisBottom(scaleBand))
+    .attr('transform', `translate(0, ${BAR_CHART_HEIGHT})`)
+
+  const xVal = (scaleBand(data.country) ?? BAR_WIDTH / 2) - BAR_WIDTH / 2
   const countrySortedFoods =
     sortingType === 'food' ? [] : getCountrySortedValues(data).map(getNames)
 
