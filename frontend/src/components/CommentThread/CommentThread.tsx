@@ -29,13 +29,6 @@ export const CommentThreadComponent = ({
 }) => {
   const { data, loading } = useFetchCommentWithId(threadId, trigger)
 
-  useEffect(() => {
-    console.log('mount')
-    return () => {
-      console.log('unmount')
-    }
-  }, [])
-
   const titleData = {
     country: data?.chartDataPoint.country ?? dataPoint?.country,
     feature: data?.chartDataPoint.feature ?? dataPoint?.feature,
