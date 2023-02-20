@@ -37,15 +37,24 @@ export const CommentThreadComponent = ({
   }
 
   const title = !!titleData.feature && (
-    <SDataPointTitle>
-      {titleData.feature} - {!!titleData.country && COUNTRIES[titleData.country]}
-    </SDataPointTitle>
+    <div>
+      <SDataPointTitle>
+        <strong>Food: </strong>
+        {titleData.feature}
+      </SDataPointTitle>
+      {!!titleData.country && (
+        <SDataPointTitle>
+          <strong>Country: </strong>
+          {COUNTRIES[titleData.country]}
+        </SDataPointTitle>
+      )}
+    </div>
   )
 
   return (
     <SBlock>
       <div>
-        <STitle>Comment Thread</STitle>
+        <STitle>Comments</STitle>
         {loading ? (
           <p>Super nice loading component</p>
         ) : !dataPoint && !threadId && !data?.comments ? (
@@ -59,14 +68,16 @@ export const CommentThreadComponent = ({
             {(title || !data?.comments?.length) && (
               <SStackCentered>
                 {title && title}
-                {!data?.comments?.length && <p style={{ marginTop: '1rem' }}>No comments yet</p>}
+                {!data?.comments?.length && <p>No comments yet</p>}
               </SStackCentered>
             )}
-            <SStack space="1.5rem">
-              {data?.comments?.map((comment) => (
-                <CommentCard comment={comment} key={comment.userName + comment.text} />
-              ))}
-            </SStack>
+            {data?.comments && (
+              <SStack>
+                {data?.comments?.map((comment) => (
+                  <CommentCard comment={comment} key={comment.userName + comment.text} />
+                ))}
+              </SStack>
+            )}
 
             {(threadId || dataPoint) && (
               <ResponseForm

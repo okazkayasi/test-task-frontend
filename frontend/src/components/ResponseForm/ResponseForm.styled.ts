@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 export const SForm = styled.form`
   max-width: 700px;
-  padding: 2rem;
+  margin-top: 1rem;
   box-sizing: border-box;
   position: relative;
   left: 50%;

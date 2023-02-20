@@ -7,14 +7,14 @@ export const SNameLogoWrapper = styled.div`
   background-color: darkgray;
 `
 export const SCardWrapper = styled.div`
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
   max-width: 20rem;
-  &:not(:last-of-type) {
-    margin-bottom: 1rem;
-  }
   &:not(:first-of-type) {
     margin-left: 1rem;
   }

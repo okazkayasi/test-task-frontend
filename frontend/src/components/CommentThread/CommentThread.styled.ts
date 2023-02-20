@@ -6,9 +6,9 @@ export const SBlock = styled(Block)`
   margin-bottom: 2rem;
 `
 export const SStack = styled(Stack)`
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   & > *:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 `
 export const SStackCentered = styled(SStack)`
@@ -22,4 +22,9 @@ export const STitle = styled.h2`
 `
 export const SDataPointTitle = styled.h3`
   text-transform: capitalize;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  strong {
+    font-weight: 700;
+  }
 `
