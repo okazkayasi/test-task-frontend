@@ -7,7 +7,16 @@ import {
   FetchCommentHook,
   FetchCommentWithIdHook,
   FetchHook,
+  ShareResponse,
 } from 'utils/types'
+
+export function getShareableLink() {
+  const data = getFetch('http://localhost:8000/share').then((data) => {
+    return data as ShareResponse
+  })
+  if (!data) return { token: null }
+  return data
+}
 
 export function useFetchCommentWithId(threadId: Nullable<string>, trigger?: number) {
   const { data, loading } = useFetch(
@@ -65,12 +74,12 @@ function useFetch(url: Nullable<string>, trigger?: number) {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     if (url == null) return
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data)
-        setLoading(false)
-      })
+    getFetch(url).then((data) => {
+      setData(data)
+      setLoading(false)
+    })
   }, [url, trigger])
   return { data, loading }
 }
+
+const getFetch = (url: string) => fetch(url).then((res) => res.json())

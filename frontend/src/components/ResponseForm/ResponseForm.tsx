@@ -6,7 +6,7 @@ import {
   SLabel,
   STitle,
 } from 'components/ResponseForm/ResponseForm.styled'
-import React, { Dispatch, SetStateAction } from 'react'
+import React from 'react'
 import { postCreateThread, postRespondToExistingThread } from 'utils/talkToAPIFunctions'
 import { ChartDataPoint } from 'utils/types'
 

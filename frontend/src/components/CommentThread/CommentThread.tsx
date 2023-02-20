@@ -1,18 +1,16 @@
-import { css } from '@emotion/react'
 import { Nullable } from 'components/App/types'
 import { CommentCard } from 'components/CommentCard/CommentCard'
+import {
+  SBlock,
+  SDataPointTitle,
+  SStack,
+  SStackCentered,
+  STitle,
+} from 'components/CommentThread/CommentThread.styled'
 import { COUNTRIES } from 'components/CommentThread/constants'
 import { ResponseForm } from 'components/ResponseForm/ResponseForm'
-import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useFetchCommentWithId } from 'utils/talkToAPIFunctions'
-import { ChartDataPoint, Comment, CommentThread, CommentThreadResponse } from 'utils/types'
-import {
-  SStack,
-  SDataPointTitle,
-  STitle,
-  SBlock,
-  SStackCentered,
-} from 'components/CommentThread/CommentThread.styled'
+import { ChartDataPoint, CommentThread } from 'utils/types'
 
 export const CommentThreadComponent = ({
   commentData,

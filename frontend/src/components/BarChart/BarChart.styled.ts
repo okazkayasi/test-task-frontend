@@ -5,7 +5,7 @@ export const SStack = styled(Stack)`
   align-items: center;
 `
 export const SButtonWrapper = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 `
 
 export const STitle = styled.h1`

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { SortingType } from 'components/BarChart/types'
 
-const SButton = styled.button`
+export const SButton = styled.button`
   background-color: #0a0a23;
   color: #fff;
   border: none;

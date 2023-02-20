@@ -1,11 +1,11 @@
 import { SButtonWrapper, SStack, STitle } from 'components/BarChart/BarChart.styled'
 import { TOTAL_SVG_HEIGHT, TOTAL_SVG_WIDTH } from 'components/BarChart/constants'
-import { ToggleButton } from 'components/BarChart/ToggleButton'
+import { SButton, ToggleButton } from 'components/BarChart/ToggleButton'
 import { SetDataPointType, SetThreadIdType, SortingType } from 'components/BarChart/types'
 import { Block } from 'lib/Block'
 import { useEffect, useRef, useState } from 'react'
 import { drawStackedBarChart } from 'utils/drawFunctions'
-import { useFetchChartData } from 'utils/talkToAPIFunctions'
+import { getShareableLink, useFetchChartData } from 'utils/talkToAPIFunctions'
 import { CommentThread } from 'utils/types'
 import { getCountryWiseMaxValue, getFoodWiseValues } from 'utils/valueFunctions'
 
@@ -20,7 +20,16 @@ export const BarChart = ({
 }) => {
   const ref = useRef<SVGSVGElement>(null)
   const [sorting, setSorting] = useState<SortingType>('country')
+  const [linkCopied, setLinkCopied] = useState(false)
   const { data, loading } = useFetchChartData()
+
+  useEffect(() => {
+    if (linkCopied) {
+      setTimeout(() => {
+        setLinkCopied(false)
+      }, 2000)
+    }
+  }, [linkCopied])
 
   useEffect(() => {
     if (data) {
@@ -35,6 +44,11 @@ export const BarChart = ({
     }
   }, [data, sorting, commentData, setThreadId, setDataPoint])
 
+  const copyLink = async () => {
+    const data = await getShareableLink()
+    await navigator.clipboard.writeText(data.token || 'not-successful')
+    setLinkCopied(true)
+  }
   const toggleSorting = () => {
     setSorting(sorting === 'country' ? 'food' : 'country')
   }
@@ -46,9 +60,16 @@ export const BarChart = ({
       <div>
         <SStack>
           <STitle>Country-Food Bar Chart</STitle>
-          <SButtonWrapper>
-            <ToggleButton sorting={sorting} toggleSorting={toggleSorting} />
-          </SButtonWrapper>
+          <SStack style={{ marginBottom: '2rem' }}>
+            <SButtonWrapper>
+              <ToggleButton sorting={sorting} toggleSorting={toggleSorting} />
+            </SButtonWrapper>
+            <SButtonWrapper>
+              <SButton onClick={copyLink}>
+                {!linkCopied ? 'Copy sharing link' : 'Link copied'}
+              </SButton>
+            </SButtonWrapper>
+          </SStack>
         </SStack>
         <svg width={TOTAL_SVG_WIDTH} height={TOTAL_SVG_HEIGHT} ref={ref} />
       </div>

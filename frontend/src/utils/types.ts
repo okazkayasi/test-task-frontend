@@ -1,3 +1,5 @@
+import { Nullable } from 'components/App/types'
+
 export type ChartDataFeature = 'hotdog' | 'burger' | 'sandwich' | 'kebab' | 'fries' | 'donut'
 export type Country = 'FR' | 'GB' | 'BE' | 'DE' | 'ES' | 'IT'
 export type ChartDataPoint = {
@@ -36,4 +38,8 @@ export type FetchHook = {
 export type FetchCommentWithIdHook = {
   data: CommentThreadResponse | null
   loading: boolean
+}
+
+export type ShareResponse = {
+  token: Nullable<string>
 }

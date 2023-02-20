@@ -1,7 +1,7 @@
+import { SStack } from 'components/App/App.styled'
 import { Nullable } from 'components/App/types'
 import { BarChart } from 'components/BarChart/BarChart'
 import { CommentThreadComponent } from 'components/CommentThread/CommentThread'
-import { SStack } from 'components/App/App.styled'
 import { useState } from 'react'
 import { useFetchComments } from 'utils/talkToAPIFunctions'
 import { ChartDataPoint } from 'utils/types'
