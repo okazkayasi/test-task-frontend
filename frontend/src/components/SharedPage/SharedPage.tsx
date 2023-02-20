@@ -11,11 +11,8 @@ export const SharedPage = () => {
 
   useEffect(() => {
     if (token) {
-      // talk to API
-      // if token is valid, setValidToken(true)
-      const data = getTokenData(token).then((data) => {
+      getTokenData(token).then((data) => {
         if (data) {
-          console.log(data)
           setValidToken(true)
         }
         setCheckingToken(false)

@@ -1,3 +1,4 @@
+import { COUNTRIES_RECORD } from 'components/App/constants'
 import { Nullable } from 'components/App/types'
 import { CommentCard } from 'components/CommentCard/CommentCard'
 import {
@@ -7,7 +8,6 @@ import {
   SStackCentered,
   STitle,
 } from 'components/CommentThread/CommentThread.styled'
-import { COUNTRIES } from 'components/CommentThread/constants'
 import { ResponseForm } from 'components/ResponseForm/ResponseForm'
 import { useFetchCommentWithId } from 'utils/talkToAPIFunctions'
 import { ChartDataPoint, CommentThread } from 'utils/types'
@@ -41,7 +41,7 @@ export const CommentThreadComponent = ({
       {!!titleData.country && (
         <SDataPointTitle>
           <strong>Country: </strong>
-          {COUNTRIES[titleData.country]}
+          {COUNTRIES_RECORD[titleData.country]}
         </SDataPointTitle>
       )}
     </div>

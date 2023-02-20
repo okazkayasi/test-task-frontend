@@ -1,4 +1,4 @@
-import { FOODS } from 'components/BarChart/constants'
+import { FOODS } from 'components/App/constants'
 import { ChartDataFeature, DataPoint } from 'utils/types'
 
 export const getCountryWiseMaxValue = (data: DataPoint[] | null) => {
@@ -10,8 +10,7 @@ export const getCountryWiseMaxValue = (data: DataPoint[] | null) => {
     })
     .map((d) => Object.values(d).reduce((acc, curr) => acc + curr, 0))
 
-  const maxVal = countryWiseTotalValues ? Math.max(...countryWiseTotalValues) : 0
-  return maxVal
+  return countryWiseTotalValues ? Math.max(...countryWiseTotalValues) : 0
 }
 
 export const getFoodWiseValues = (data: DataPoint[] | null) => {

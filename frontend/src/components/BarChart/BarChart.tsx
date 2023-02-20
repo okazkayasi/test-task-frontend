@@ -1,5 +1,5 @@
+import { TOTAL_SVG_HEIGHT, TOTAL_SVG_WIDTH } from 'components/App/constants'
 import { SButtonWrapper, SStack, STitle } from 'components/BarChart/BarChart.styled'
-import { TOTAL_SVG_HEIGHT, TOTAL_SVG_WIDTH } from 'components/BarChart/constants'
 import { SButton, ToggleButton } from 'components/BarChart/ToggleButton'
 import { SetDataPointType, SetThreadIdType, SortingType } from 'components/BarChart/types'
 import { Block } from 'lib/Block'

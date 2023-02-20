@@ -1,6 +1,7 @@
 import { HomePage } from 'components/HomePage/HomePage'
 import { SharedPage } from 'components/SharedPage/SharedPage'
-import { BrowserRouter as Router, Routes, Route, useRoutes } from 'react-router-dom'
+import { BrowserRouter as Router, useRoutes } from 'react-router-dom'
+
 function App() {
   return useRoutes([
     { path: '/', element: <HomePage /> },

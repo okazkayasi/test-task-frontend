@@ -1,26 +1,24 @@
 import {
   BAR_CHART_HEIGHT,
   BAR_CHART_WIDTH,
+  BAR_WIDTH,
+  COLORS,
   COUNTRIES,
   PADDING_LEFT,
-} from 'components/BarChart/constants'
+} from 'components/App/constants'
 import { SetDataType, SortingType } from 'components/BarChart/types'
 import * as d3 from 'd3'
 import React from 'react'
-import { ChartDataFeature, ChartDataPoint, CommentThread, DataPoint } from 'utils/types'
+import {
+  ChartDataFeature,
+  ChartDataPoint,
+  ChartValues,
+  CommentThread,
+  D3Selection,
+  DataPoint,
+  FoodNameTotalValueObject,
+} from 'utils/types'
 import { getCountrySortedValues, getNames } from 'utils/valueFunctions'
-
-export const BAR_WIDTH = 70
-export const SPACE_BETWEEN_BARS = 30
-export const COLORS = {
-  hotdog: '#4682b4',
-  burger: '#697fc4',
-  sandwich: '#9876c6',
-  kebab: '#c667b8',
-  fries: '#ea589a',
-  donut: '#ff5370',
-}
-type FoodNameTotalValueObject = { name: ChartDataFeature; value: number }
 
 export const drawStackedBarChart = (
   ref: React.RefObject<SVGSVGElement>,
@@ -101,8 +99,6 @@ export const drawStackedBar = (
   })
 }
 
-type D3Selection<T extends d3.BaseType> = d3.Selection<T, unknown, null, undefined>
-
 export const raiseBar = (
   bar: D3Selection<SVGRectElement>,
   text1: D3Selection<SVGTextElement>,
@@ -113,11 +109,6 @@ export const raiseBar = (
   text2.raise()
 }
 
-type ChartValues = {
-  x: number
-  y: number
-  height: number
-}
 export const drawBar = (
   chartSvg: D3Selection<SVGGElement>,
   chartValues: ChartValues,
@@ -172,7 +163,7 @@ const addCommentTextOnBar = (
   countryFoodCommentDataLength: number,
   onClick: () => void,
 ) => {
-  const text = chartSvg
+  return chartSvg
     .append('text')
     .attr('x', chartValues.x + BAR_WIDTH / 2)
     .attr('y', chartValues.y)
@@ -189,7 +180,6 @@ const addCommentTextOnBar = (
     .style('cursor', 'pointer')
     .text(countryFoodCommentDataLength ? `${countryFoodCommentDataLength} comments` : 'No comment')
     .on('click', onClick)
-  return text
 }
 
 const addFoodTextOnBar = (
@@ -198,7 +188,7 @@ const addFoodTextOnBar = (
   foodType: ChartDataFeature,
   onClick: () => void,
 ) => {
-  const text = chartSvg
+  return chartSvg
     .append('text')
     .attr('x', chartValues.x + BAR_WIDTH / 2)
     .attr('y', chartValues.y)
@@ -216,6 +206,4 @@ const addFoodTextOnBar = (
     })
     .text(foodType)
     .on('click', onClick)
-
-  return text
 }
