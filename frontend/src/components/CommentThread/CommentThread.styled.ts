@@ -11,10 +11,14 @@ export const SStack = styled(Stack)`
     margin-bottom: 1rem;
   }
 `
+export const SStackCentered = styled(SStack)`
+  align-items: center;
+`
 
 export const STitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 700;
+  text-align: center;
 `
 export const SDataPointTitle = styled.h3`
   text-transform: capitalize;

@@ -1,5 +1,6 @@
-import { SButtonWrapper } from 'components/BarChart/BarChart.styled'
+import { SButtonWrapper, SStack, STitle } from 'components/BarChart/BarChart.styled'
 import { TOTAL_SVG_HEIGHT, TOTAL_SVG_WIDTH } from 'components/BarChart/constants'
+import { ToggleButton } from 'components/BarChart/ToggleButton'
 import { SetDataPointType, SetThreadIdType, SortingType } from 'components/BarChart/types'
 import { Block } from 'lib/Block'
 import { useEffect, useRef, useState } from 'react'
@@ -44,14 +45,12 @@ export const BarChart = ({
   return (
     <Block>
       <div>
-        <div>
-          <h2>Bar Chart</h2>
-        </div>
-        <SButtonWrapper>
-          <button onClick={toggleSorting}>
-            Set to {sorting === 'food' ? 'country' : 'food'}-based sorting
-          </button>
-        </SButtonWrapper>
+        <SStack>
+          <STitle>Country-Food Bar Chart</STitle>
+          <SButtonWrapper>
+            <ToggleButton sorting={sorting} toggleSorting={toggleSorting} />
+          </SButtonWrapper>
+        </SStack>
         <svg width={TOTAL_SVG_WIDTH} height={TOTAL_SVG_HEIGHT} ref={ref} />
       </div>
     </Block>

@@ -4,6 +4,9 @@ export const SForm = styled.form`
   max-width: 700px;
   padding: 2rem;
   box-sizing: border-box;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 `
 
 export const STitle = styled.h2`

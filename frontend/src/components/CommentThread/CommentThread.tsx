@@ -10,6 +10,7 @@ import {
   SDataPointTitle,
   STitle,
   SBlock,
+  SStackCentered,
 } from 'components/CommentThread/CommentThread.styled'
 
 export const CommentThreadComponent = ({
@@ -49,17 +50,24 @@ export const CommentThreadComponent = ({
           <p>Super nice loading component</p>
         ) : !dataPoint && !threadId && !data?.comments ? (
           <>
-            <p style={{ marginTop: '1rem' }}>Select a data point from bar chart to add comment</p>
-            {title}
+            <p style={{ marginTop: '1rem', textAlign: 'center' }}>
+              Select data point from bar chart to add comment
+            </p>
           </>
         ) : (
           <SStack>
-            {title}
+            {(title || !data?.comments?.length) && (
+              <SStackCentered>
+                {title && title}
+                {!data?.comments?.length && <p style={{ marginTop: '1rem' }}>No comments yet</p>}
+              </SStackCentered>
+            )}
             <SStack space="1.5rem">
               {data?.comments?.map((comment) => (
                 <CommentCard comment={comment} key={comment.userName + comment.text} />
               ))}
             </SStack>
+
             {(threadId || dataPoint) && (
               <ResponseForm
                 title={threadId ? 'Enter a response' : 'Enter a comment'}
