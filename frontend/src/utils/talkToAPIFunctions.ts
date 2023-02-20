@@ -32,7 +32,7 @@ export async function postCreateThread(comment: Comment, dataPoint: ChartDataPoi
       data_point: dataPoint,
     }),
   }).then((res) => res.json())) as CommentThreadResponse
-  return res.comments
+  return res
 }
 export async function postRespondToExistingThread(threadId: string, comment: Comment) {
   const res = (await fetch(`http://localhost:8000/chart/comment_threads/${threadId}/respond`, {

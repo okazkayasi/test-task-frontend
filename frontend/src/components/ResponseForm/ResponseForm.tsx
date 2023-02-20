@@ -6,20 +6,20 @@ import {
   SLabel,
   STitle,
 } from 'components/ResponseForm/ResponseForm.styled'
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { postCreateThread, postRespondToExistingThread } from 'utils/talkToAPIFunctions'
-import { ChartDataPoint, Comment } from 'utils/types'
+import { ChartDataPoint } from 'utils/types'
 
 export const ResponseForm = ({
   title,
   threadId,
   dataPoint,
-  setCommentAndTrigger,
+  triggerFetch,
 }: {
   title: string
   threadId: Nullable<string>
   dataPoint: Nullable<ChartDataPoint>
-  setCommentAndTrigger: (comment: Comment[]) => void
+  triggerFetch: () => void
 }) => {
   const postData = async (name: string, comment: string) => {
     if (threadId) {
@@ -27,9 +27,7 @@ export const ResponseForm = ({
         userName: name,
         text: comment,
       })
-        .then((comments) => {
-          setCommentAndTrigger(comments)
-        })
+        .then(triggerFetch)
         .catch((err) => console.error(err, 'err'))
     } else if (dataPoint) {
       postCreateThread(
@@ -39,9 +37,7 @@ export const ResponseForm = ({
         },
         dataPoint,
       )
-        .then((comments) => {
-          setCommentAndTrigger(comments)
-        })
+        .then(triggerFetch)
         .catch((err) => console.error(err, 'err'))
     }
   }

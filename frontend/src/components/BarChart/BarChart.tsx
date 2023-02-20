@@ -22,19 +22,18 @@ export const BarChart = ({
   const [sorting, setSorting] = useState<SortingType>('country')
   const { data, loading } = useFetchChartData()
 
-  const setData = {
-    threadId: setThreadId,
-    dataPoint: setDataPoint,
-  }
-
   useEffect(() => {
     if (data) {
+      const setData = {
+        threadId: setThreadId,
+        dataPoint: setDataPoint,
+      }
       const maxValue = getCountryWiseMaxValue(data)
       const foodWiseTotalValues = getFoodWiseValues(data)
       ref.current?.replaceChildren()
       drawStackedBarChart(ref, data, maxValue, foodWiseTotalValues, sorting, commentData, setData)
     }
-  }, [data, sorting, commentData, setThreadId])
+  }, [data, sorting, commentData, setThreadId, setDataPoint])
 
   const toggleSorting = () => {
     setSorting(sorting === 'country' ? 'food' : 'country')

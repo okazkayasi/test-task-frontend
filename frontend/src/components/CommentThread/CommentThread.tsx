@@ -3,8 +3,9 @@ import { Nullable } from 'components/App/types'
 import { CommentCard } from 'components/CommentCard/CommentCard'
 import { COUNTRIES } from 'components/CommentThread/constants'
 import { ResponseForm } from 'components/ResponseForm/ResponseForm'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useFetchCommentWithId } from 'utils/talkToAPIFunctions'
-import { ChartDataPoint, Comment, CommentThread } from 'utils/types'
+import { ChartDataPoint, Comment, CommentThread, CommentThreadResponse } from 'utils/types'
 import {
   SStack,
   SDataPointTitle,
@@ -17,19 +18,23 @@ export const CommentThreadComponent = ({
   commentData,
   threadId,
   dataPoint,
-  triggerFetch,
   trigger,
+  triggerFetch,
 }: {
   commentData: CommentThread[] | null
   threadId: Nullable<string>
   dataPoint: Nullable<ChartDataPoint>
-  triggerFetch: () => void
   trigger: number
+  triggerFetch: () => void
 }) => {
   const { data, loading } = useFetchCommentWithId(threadId, trigger)
-  const setCommentAndTrigger = (comments: Comment[]) => {
-    triggerFetch()
-  }
+
+  useEffect(() => {
+    console.log('mount')
+    return () => {
+      console.log('unmount')
+    }
+  }, [])
 
   const titleData = {
     country: data?.chartDataPoint.country ?? dataPoint?.country,
@@ -83,8 +88,8 @@ export const CommentThreadComponent = ({
               <ResponseForm
                 title={threadId ? 'Enter a response' : 'Enter a comment'}
                 threadId={threadId}
-                setCommentAndTrigger={setCommentAndTrigger}
                 dataPoint={dataPoint}
+                triggerFetch={triggerFetch}
               />
             )}
           </SStack>
