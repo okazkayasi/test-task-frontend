@@ -27,7 +27,7 @@ export const BarChart = ({
     if (linkCopied) {
       setTimeout(() => {
         setLinkCopied(false)
-      }, 2000)
+      }, 300)
     }
   }, [linkCopied])
 
