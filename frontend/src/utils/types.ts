@@ -1,5 +1,5 @@
 import { Nullable } from 'components/App/types'
-import * as d3 from 'd3'
+import { BaseType, Selection } from 'd3'
 
 export type ChartDataFeature = 'hotdog' | 'burger' | 'sandwich' | 'kebab' | 'fries' | 'donut'
 export type Country = 'FR' | 'GB' | 'BE' | 'DE' | 'ES' | 'IT'
@@ -45,7 +45,7 @@ export type ShareResponse = {
   token: Nullable<string>
 }
 export type FoodNameTotalValueObject = { name: ChartDataFeature; value: number }
-export type D3Selection<T extends d3.BaseType> = d3.Selection<T, unknown, null, undefined>
+export type D3Selection<T extends BaseType> = Selection<T, unknown, null, undefined>
 export type ChartValues = {
   x: number
   y: number

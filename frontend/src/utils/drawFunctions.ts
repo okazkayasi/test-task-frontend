@@ -7,7 +7,14 @@ import {
   PADDING_LEFT,
 } from 'components/App/constants'
 import { SetDataType, SortingType } from 'components/BarChart/types'
-import * as d3 from 'd3'
+import {
+  scaleLinear as d3ScaleLinear,
+  scaleBand as d3ScaleBand,
+  ScaleBand as ScaleBandType,
+  select as d3Select,
+  axisBottom as d3AxisBottom,
+  axisLeft as d3AxisLeft,
+} from 'd3'
 import React from 'react'
 import {
   ChartDataFeature,
@@ -29,19 +36,16 @@ export const drawStackedBarChart = (
   commentData: CommentThread[] | null,
   setData: SetDataType,
 ) => {
-  const scaleYAxis = d3.scaleLinear().domain([maxValue, 0]).range([0, BAR_CHART_HEIGHT])
-  const scaleBand = d3.scaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.3)
+  const scaleYAxis = d3ScaleLinear().domain([maxValue, 0]).range([0, BAR_CHART_HEIGHT])
+  const scaleBand = d3ScaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.3)
 
-  const svg = d3.select(ref.current)
+  const svg = d3Select(ref.current)
   svg
     .append('g')
-    .call(d3.axisBottom(scaleBand))
+    .call(d3AxisBottom(scaleBand))
     .attr('transform', `translate(${PADDING_LEFT}, ${BAR_CHART_HEIGHT + 10})`)
 
-  svg
-    .append('g')
-    .call(d3.axisLeft(scaleYAxis))
-    .attr('transform', `translate(${PADDING_LEFT}, ${0})`)
+  svg.append('g').call(d3AxisLeft(scaleYAxis)).attr('transform', `translate(${PADDING_LEFT}, ${0})`)
 
   const chartSvg = svg.append('g').attr('transform', `translate(${PADDING_LEFT}, ${0})`)
 
@@ -70,10 +74,10 @@ export const drawStackedBar = (
   sortedFoods: ChartDataFeature[],
   sortingType: SortingType,
   setData: SetDataType,
-  scaleBand: d3.ScaleBand<string>,
+  scaleBand: ScaleBandType<string>,
   countryCommentData?: CommentThread[],
 ) => {
-  const scaleHeight = d3.scaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
+  const scaleHeight = d3ScaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
 
   const xVal = scaleBand(data.country) ?? BAR_WIDTH / 2
   const countrySortedFoods =
@@ -140,7 +144,7 @@ export const drawBar = (
     .attr('rx', '5')
     .style('cursor', 'pointer')
     .on('mouseout', function (d) {
-      d3.select(this).attr('stroke', 'white')
+      d3Select(this).attr('stroke', 'white')
     })
     .on('click', onClick)
 
