@@ -14,6 +14,7 @@ import {
   select as d3Select,
   axisBottom as d3AxisBottom,
   axisLeft as d3AxisLeft,
+  ScaleLinear,
 } from 'd3'
 import React from 'react'
 import {
@@ -25,21 +26,20 @@ import {
   DataPoint,
   FoodNameTotalValueObject,
 } from 'utils/types'
-import { getCountrySortedValues, getNames } from 'utils/valueFunctions'
+import {
+  getCountrySortedValues,
+  getCountryWiseMaxValue,
+  getFoodWiseValues,
+  getNames,
+} from 'utils/valueFunctions'
 
-export const drawStackedBarChart = (
+const drawMainSVGElements = (
   ref: React.RefObject<SVGSVGElement>,
-  data: DataPoint[],
-  maxValue: number,
-  foodWiseTotalValues: FoodNameTotalValueObject[],
-  sortingType: SortingType,
-  commentData: CommentThread[] | null,
-  setData: SetDataType,
+  scaleBand: ScaleBandType<string>,
+  scaleYAxis: ScaleLinear<number, number>,
 ) => {
-  const scaleYAxis = d3ScaleLinear().domain([maxValue, 0]).range([0, BAR_CHART_HEIGHT])
-  const scaleBand = d3ScaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.3)
-
   const svg = d3Select(ref.current)
+
   svg
     .append('g')
     .call(d3AxisBottom(scaleBand))
@@ -52,25 +52,44 @@ export const drawStackedBarChart = (
     .attr('transform', `translate(${PADDING_LEFT}, ${0})`)
     .attr('data-testid', 'y-axis')
 
-  const chartSvg = svg
+  return svg
     .append('g')
     .attr('transform', `translate(${PADDING_LEFT}, ${0})`)
     .attr('data-testid', 'chart-svg')
+}
 
-  const sortedFoods = foodWiseTotalValues.map(getNames)
+export const drawStackedBarChart = (
+  ref: React.RefObject<SVGSVGElement>,
+  data: DataPoint[],
+  sortingType: SortingType,
+  commentData: CommentThread[] | null,
+  setData: SetDataType,
+) => {
+  const maxValue = getCountryWiseMaxValue(data)
+  const foodWiseTotalValues = getFoodWiseValues(data)
+  const totalFoodOrdered = foodWiseTotalValues.map(getNames)
+
+  const scaleYAxis = d3ScaleLinear().domain([maxValue, 0]).range([0, BAR_CHART_HEIGHT])
+  const scaleBand = d3ScaleBand().domain(COUNTRIES).range([0, BAR_CHART_WIDTH]).padding(0.3)
+  const scaleHeight = d3ScaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
+  const chartSvg = drawMainSVGElements(ref, scaleBand, scaleYAxis)
+
   data.forEach((dataPoint, index) => {
-    const countryCommentData = commentData?.filter(
-      (c) => c.chartDataPoint?.country === dataPoint.country,
-    )
+    const countryCommentData =
+      commentData?.filter((c) => c.chartDataPoint?.country === dataPoint.country) ?? []
+
+    const countryWiseFoodOrdered =
+      sortingType === 'food' ? [] : getCountrySortedValues(dataPoint).map(getNames)
+    const orderedFoodArray = sortingType === 'food' ? totalFoodOrdered : countryWiseFoodOrdered
+
     drawStackedBar(
       chartSvg,
       dataPoint,
-      maxValue,
-      sortedFoods,
-      sortingType,
+      orderedFoodArray,
       setData,
-      scaleBand,
       countryCommentData,
+      scaleHeight,
+      scaleBand,
     )
   })
 }
@@ -78,23 +97,16 @@ export const drawStackedBarChart = (
 export const drawStackedBar = (
   chartSvg: D3Selection<SVGGElement>,
   data: DataPoint,
-  maxValue: number,
-  sortedFoods: ChartDataFeature[],
-  sortingType: SortingType,
+  orderedFoodArray: ChartDataFeature[],
   setData: SetDataType,
+  countryCommentData: CommentThread[],
+  scaleHeight: ScaleLinear<number, number>,
   scaleBand: ScaleBandType<string>,
-  countryCommentData?: CommentThread[],
 ) => {
-  const scaleHeight = d3ScaleLinear().domain([0, maxValue]).range([0, BAR_CHART_HEIGHT])
-
   const xVal = scaleBand(data.country) ?? BAR_WIDTH / 2
-  const countrySortedFoods =
-    sortingType === 'food' ? [] : getCountrySortedValues(data).map(getNames)
-
-  const finalSorted = sortingType === 'food' ? sortedFoods : countrySortedFoods
 
   let heightLeft = Number.MAX_VALUE
-  finalSorted.forEach((foodType, index) => {
+  orderedFoodArray.forEach((foodType, index) => {
     const countryFoodCommentData = countryCommentData?.find(
       (c) => c.chartDataPoint?.feature === foodType,
     )
@@ -186,10 +198,7 @@ const addCommentTextOnBar = (
     .attr('font-size', () => {
       return '0.4rem'
     })
-    .style('display', () => {
-      if (chartValues.height < 25) return 'none'
-      return 'block'
-    })
+    .style('display', () => (chartValues.height < 25 ? 'none' : 'block'))
     .style('cursor', 'pointer')
     .text(countryFoodCommentDataLength ? `${countryFoodCommentDataLength} comments` : 'No comment')
     .on('click', onClick)
@@ -210,13 +219,7 @@ const addFoodTextOnBar = (
     .attr('dominant-baseline', 'middle')
     .style('text-transform', 'capitalize')
     .style('cursor', 'pointer')
-    .attr('font-size', () => {
-      if (chartValues.height > 14) {
-        return '0.5rem'
-      } else {
-        return '0.3rem'
-      }
-    })
+    .attr('font-size', () => (chartValues.height > 14 ? '0.5rem' : '0.3rem'))
     .text(foodType)
     .on('click', onClick)
 }

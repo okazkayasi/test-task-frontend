@@ -37,10 +37,8 @@ export const BarChart = ({
         threadId: setThreadId,
         dataPoint: setDataPoint,
       }
-      const maxValue = getCountryWiseMaxValue(data)
-      const foodWiseTotalValues = getFoodWiseValues(data)
       ref.current?.replaceChildren()
-      drawStackedBarChart(ref, data, maxValue, foodWiseTotalValues, sorting, commentData, setData)
+      drawStackedBarChart(ref, data, sorting, commentData, setData)
     }
   }, [data, sorting, commentData, setThreadId, setDataPoint])
 
