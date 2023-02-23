@@ -128,13 +128,13 @@ export const drawBar = (
     .attr('width', BAR_WIDTH)
     .attr('height', chartValues.height)
     .attr('fill', COLORS[barInfo.feature])
-    .attr('stroke', 'white')
     .attr('stroke-width', 2)
+    .attr('stroke', 'black')
     .attr('rx', '5')
     .attr('data-testid', `${barInfo.country} ${barInfo.feature}`)
     .style('cursor', 'pointer')
     .on('mouseout', function (d) {
-      d3Select(this).attr('stroke', 'white')
+      d3Select(this).attr('stroke', 'black')
     })
     .on('click', onClick)
 

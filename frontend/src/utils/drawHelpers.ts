@@ -35,7 +35,7 @@ export const raiseBar = (
   text1: D3Selection<SVGTextElement>,
   text2: D3Selection<SVGTextElement>,
 ) => {
-  bar.attr('stroke', 'black').raise()
+  bar.attr('stroke', 'white').raise()
   text1.raise()
   text2.raise()
 }
@@ -50,12 +50,11 @@ export const addCommentTextOnBar = (
     .append('text')
     .attr('x', chartValues.x + BAR_WIDTH / 2)
     .attr('y', chartValues.y)
-    .attr('dy', chartValues.height / 2 + 8)
+    .attr('dy', chartValues.height / 2 + 10)
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
-    .attr('font-size', () => {
-      return '0.4rem'
-    })
+    .attr('font-size', '0.5rem')
+    .style('font-family', 'sans-serif')
     .style('display', () => (chartValues.height < 25 ? 'none' : 'block'))
     .style('cursor', 'pointer')
     .text(countryFoodCommentDataLength ? `${countryFoodCommentDataLength} comments` : 'No comment')
@@ -77,7 +76,9 @@ export const addFoodTextOnBar = (
     .attr('dominant-baseline', 'middle')
     .style('text-transform', 'capitalize')
     .style('cursor', 'pointer')
-    .attr('font-size', () => (chartValues.height > 14 ? '0.5rem' : '0.3rem'))
+    .style('font-family', 'sans-serif')
+    .attr('font-size', () => (chartValues.height > 14 ? '0.7rem' : '0.3rem'))
+    .style('font-weight', 'bold')
     .text(foodType)
     .on('click', onClick)
 }
