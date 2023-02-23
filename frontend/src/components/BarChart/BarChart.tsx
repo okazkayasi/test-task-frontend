@@ -46,14 +46,14 @@ export const BarChart = ({
 
   const copyLink = async () => {
     const data = await getShareableLink()
-    await navigator.clipboard.writeText(data.token || 'not-successful')
+    await navigator.clipboard?.writeText(data.token || 'not-successful')
     setLinkCopied(true)
   }
   const toggleSorting = () => {
     setSorting(sorting === 'country' ? 'food' : 'country')
   }
 
-  if (loading || !data) return <p>Nice loading animation</p>
+  if (loading || !data) return <p data-testid="loading-text">Nice loading animation</p>
 
   return (
     <Block>
@@ -65,7 +65,7 @@ export const BarChart = ({
               <ToggleButton sorting={sorting} toggleSorting={toggleSorting} />
             </SButtonWrapper>
             <SButtonWrapper>
-              <SButton onClick={copyLink}>
+              <SButton onClick={copyLink} data-testid="share-button">
                 {!linkCopied ? 'Copy sharing link' : 'Link copied'}
               </SButton>
             </SButtonWrapper>
