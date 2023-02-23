@@ -18,7 +18,7 @@ export const ToggleButton = ({
   sorting: SortingType
   toggleSorting: () => void
 }) => (
-  <SButton onClick={toggleSorting}>
+  <SButton onClick={toggleSorting} data-testid="toggle-button">
     Set to {sorting === 'food' ? 'country' : 'food'}-based sorting
   </SButton>
 )
