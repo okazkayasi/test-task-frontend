@@ -44,10 +44,18 @@ export const drawStackedBarChart = (
     .append('g')
     .call(d3AxisBottom(scaleBand))
     .attr('transform', `translate(${PADDING_LEFT}, ${BAR_CHART_HEIGHT + 10})`)
+    .attr('data-testid', 'x-axis')
 
-  svg.append('g').call(d3AxisLeft(scaleYAxis)).attr('transform', `translate(${PADDING_LEFT}, ${0})`)
+  svg
+    .append('g')
+    .call(d3AxisLeft(scaleYAxis))
+    .attr('transform', `translate(${PADDING_LEFT}, ${0})`)
+    .attr('data-testid', 'y-axis')
 
-  const chartSvg = svg.append('g').attr('transform', `translate(${PADDING_LEFT}, ${0})`)
+  const chartSvg = svg
+    .append('g')
+    .attr('transform', `translate(${PADDING_LEFT}, ${0})`)
+    .attr('data-testid', 'chart-svg')
 
   const sortedFoods = foodWiseTotalValues.map(getNames)
   data.forEach((dataPoint, index) => {
@@ -142,6 +150,7 @@ export const drawBar = (
     .attr('stroke', 'white')
     .attr('stroke-width', 2)
     .attr('rx', '5')
+    .attr('data-testid', `${barInfo.country} ${barInfo.feature}`)
     .style('cursor', 'pointer')
     .on('mouseout', function (d) {
       d3Select(this).attr('stroke', 'white')

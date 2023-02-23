@@ -71,7 +71,12 @@ export const BarChart = ({
             </SButtonWrapper>
           </SStack>
         </SStack>
-        <svg width={TOTAL_SVG_WIDTH} height={TOTAL_SVG_HEIGHT} ref={ref} />
+        <svg
+          width={TOTAL_SVG_WIDTH}
+          height={TOTAL_SVG_HEIGHT}
+          ref={ref}
+          data-testid="svg-element"
+        />
       </div>
     </Block>
   )

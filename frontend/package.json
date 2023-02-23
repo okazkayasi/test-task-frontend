@@ -30,6 +30,11 @@
     "eject": "react-scripts eject",
     "prettier": "prettier --write ."
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!d3 )/"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
