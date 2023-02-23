@@ -81,4 +81,3 @@ export const addFoodTextOnBar = (
     .text(foodType)
     .on('click', onClick)
 }
-s
